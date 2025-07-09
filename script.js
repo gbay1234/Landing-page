@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- NON-FORM-RELATED CODE (HEADER SCROLL, REVEAL, UPSELL BUILDER, AI CHAT) ---
+    // This code remains the same.
     const header = document.querySelector('.main-header');
     const handleScroll = () => {
         if (window.scrollY > 20) {
@@ -77,10 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage(text, 'user');
             chatInput.value = '';
             const thinkingMessage = displayThinking();
-            // This is a placeholder for your actual API call. We'll simulate a response.
             setTimeout(() => {
                 thinkingMessage.remove();
-                const aiResponseMarkdown = "Thanks for testing the chat! This feature is coming soon. Sign up for the waitlist to be notified!";
+                const aiResponseMarkdown = "Thanks for testing the chat! This feature is coming soon. Claim an offer from the pricing section to be notified!";
                 chatHistory.push({ role: 'assistant', content: aiResponseMarkdown });
                 const aiResponseHtml = converter.makeHtml(aiResponseMarkdown);
                 displayMessage(aiResponseHtml, 'bot');
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         displayMessage(initialMessageHtml, 'bot');
     }
 
-    // --- CONSOLIDATED FORM HANDLING & MODAL LOGIC ---
+    // --- MODAL FORM LOGIC (WIRED TO FORMSPREE) ---
     const modalOverlay = document.getElementById('founding-member-modal');
     if (modalOverlay) {
         const modalContentWrapper = document.getElementById('modal-content-wrapper');
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="modal-close" aria-label="Close modal">×</button>
                 <div class="modal-icon" style="background-color: #22c55e;"><i data-feather="check-circle"></i></div>
                 <h2 class="modal-title">You're on the list!</h2>
-                <p class="modal-text">Awesome! Your spot for the <strong>${planName}</strong> plan is secured. We'll notify you at:</p>
+                <p class="modal-text">Awesome! Your offer for the <strong>${planName}</strong> plan is secured. We'll notify you at:</p>
                 <div class="email-confirmation-box"><strong>${email}</strong></div>
                 <button class="btn btn-primary" id="final-close-btn">Sounds Good</button>
             `;
@@ -127,17 +127,24 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         const showModalForm = (planName) => {
+            // This HTML block now contains your specific Formspree endpoint
             const formHTML = `
                 <button class="modal-close" aria-label="Close modal">×</button>
                 <div class="modal-icon"><i data-feather="key"></i></div>
                 <h2 class="modal-title">Claim Your Founding Offer</h2>
                 <p class="modal-text">
-                    You've selected the <strong>${planName}</strong> plan. Enter your email to lock in your spot and a <strong>50% lifetime discount</strong> as a founding member.
+                    You've selected the <strong>${planName}</strong> plan. Enter your email to lock in your spot and a special founding member discount.
                 </p>
-                <form class="modal-form" id="modal-claim-form" name="plan-claim" netlify>
+                <form 
+                    class="modal-form" 
+                    id="modal-claim-form" 
+                    action="https://formspree.io/f/mgvyjbdb" 
+                    method="POST"
+                >
+                    <!-- This hidden input is crucial for categorizing your leads! -->
                     <input type="hidden" name="plan" value="${planName}">
                     <input type="email" name="email" id="modal-email-input" placeholder="Enter your email to claim" required>
-                    <button type="submit" class="btn btn-primary">Claim My 50% Discount</button>
+                    <button type="submit" class="btn btn-primary">Claim My Founding Offer</button>
                 </form>
             `;
             modalContentWrapper.innerHTML = formHTML;
@@ -150,22 +157,28 @@ document.addEventListener('DOMContentLoaded', () => {
             
             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
 
+            // This handler sends the data to Formspree
             modalContentWrapper.querySelector('#modal-claim-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const form = e.target;
                 const formData = new FormData(form);
                 const submittedEmail = formData.get('email');
 
-                // For Netlify, the submission is handled automatically. This fetch is for other services.
-                // We'll just show the success state.
-                fetch("/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(formData).toString()
-                }).then(() => {
-                    console.log("Modal form submitted successfully");
-                    showModalSuccess(planName, submittedEmail);
-                }).catch(error => alert(error));
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                }).then(response => {
+                    if (response.ok) {
+                        console.log("Modal form submitted successfully to Formspree");
+                        showModalSuccess(planName, submittedEmail);
+                    } else {
+                        throw new Error('Form submission failed');
+                    }
+                }).catch(error => {
+                    console.error(error);
+                    alert('Oops! There was a problem submitting the form. Please try again.');
+                });
             });
         };
 
@@ -180,28 +193,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('is-visible')) hideModal(); });
-    }
-
-    const earlyAccessForm = document.getElementById('early-access-form');
-    if (earlyAccessForm) {
-        earlyAccessForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const userEmail = formData.get('email');
-
-            fetch("/", {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams(formData).toString()
-            }).then(() => {
-                console.log("Early access form submitted successfully");
-                const ctaContainer = document.querySelector('.cta-container');
-                if (ctaContainer) {
-                    const successMessageHTML = `<div style="text-align: center; opacity: 0; transform: translateY(20px); animation: fadeIn 0.5s forwards;"><h2 style="font-family: var(--font-display); font-size: clamp(2rem, 6vw, 2.75rem); line-height: 1.2; margin-bottom: 15px; color: white;">You're on the list! ✅</h2><p style="font-size: 1.125rem; opacity: 0.8; max-width: 550px; margin: 0 auto 30px;">Thank you for your interest! We've saved your spot. We'll send an email to <strong>${userEmail}</strong> as soon as we're ready for our first hosts.</p></div><style>@keyframes fadeIn{to{opacity:1;transform:translateY(0);}}</style>`;
-                    ctaContainer.innerHTML = successMessageHTML;
-                }
-            }).catch(error => alert(error));
-        });
     }
 });
