@@ -1,66 +1,78 @@
 const OpenAI = require('openai');
 const path = require('path');
 const fs = require('fs').promises;
+const Fuse = require('fuse.js');
+const nlp = require('compromise');
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+// --- THIS IS THE CORE OF THE COST-SAVING LOGIC ---
+// This function reads the knowledge base and prepares it for searching.
+// It splits the large text into smaller, searchable chunks (paragraphs).
+async function getSearchableKnowledge() {
+    const knowledgeBasePath = path.join(process.cwd(), 'knowledge.txt');
+    const knowledgeBase = await fs.readFile(knowledgeBasePath, 'utf-8');
+    // Split the knowledge base by double newlines (paragraphs) and filter out empty ones.
+    const chunks = knowledgeBase.split(/\n\s*\n/).map(chunk => chunk.trim()).filter(Boolean);
+    return chunks;
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
     }
 
     const history = req.body.history;
-
     if (!history || history.length === 0) {
         return res.status(400).json({ error: 'Chat history is required.' });
     }
 
+    const userQuestion = history[history.length - 1].content;
+
     try {
-        const knowledgeBasePath = path.join(process.cwd(), 'knowledge.txt');
-        const knowledgeBase = await fs.readFile(knowledgeBasePath, 'utf-8');
-
-        // --- THE UPGRADED BRAIN WITH ACTION REDIRECTION ---
-        const systemPrompt = `You are a hyper-efficient and friendly AI concierge for 'Villa Oasis'. Your primary goal is to provide clear, concise, and direct answers based ONLY on the KNOWLEDGE BASE.
-
-        --- NEW RULE: ACTION & SERVICE REQUESTS ---
-        You MUST distinguish between a request for INFORMATION (e.g., "Do you have massages?") and a request for an ACTION/SERVICE (e.g., "Can you book me a massage?" or "Please remove the gecko").
-
-        - For INFORMATION requests, answer directly from the knowledge base.
-        - For ACTION/SERVICE requests, you MUST respond by redirecting them to the staff's WhatsApp. Your response should follow this format: "I can certainly help with that. To [summarize the user's request], please contact the villa staff on WhatsApp at [WhatsApp number from knowledge base] and they will assist you right away."
+        // --- STEP 1: RETRIEVAL (The cheap part) ---
+        const knowledgeChunks = await getSearchableKnowledge();
         
-        Examples:
-        - If user asks "Can you remove it?", you should find the WhatsApp number and respond: "I can certainly help with that. To have the gecko removed, please contact the villa staff on WhatsApp at +62 812 3456 7890 and they will assist you right away."
-        - If user asks "I want to book a tour to Ubud", you should respond: "I can certainly help with that. To book the Ubud tour, please contact the villa staff on WhatsApp at +62 812 3456 7890 and they will assist you right away."
+        // Use Fuse.js to perform a fuzzy search on the chunks
+        const fuse = new Fuse(knowledgeChunks, { includeScore: true, threshold: 0.5 });
+        const searchResults = fuse.search(userQuestion);
+
+        // Get the top 3-4 most relevant chunks of text.
+        const relevantContext = searchResults.slice(0, 4).map(result => result.item).join('\n\n');
+
+        // --- STEP 2: GENERATION (The now much cheaper part) ---
+        const systemPrompt = `You are a hyper-efficient AI concierge for 'Villa Oasis'. Your goal is to provide clear, concise answers based ONLY on the "RELEVANT CONTEXT" provided below.
+
+        - First, analyze the user's conversation history for context.
+        - Then, formulate your answer using the "RELEVANT CONTEXT".
+        - If the provided context is insufficient to answer the question, you MUST politely decline by saying: "Sorry, I couldn't find specific information on that. You can try rephrasing, or contact staff for more help."
+        - For action/service requests (e.g., "book a massage"), redirect them to the staff's WhatsApp: +62 812 3456 7890.
+        - Be direct and avoid conversational fluff. Use bullet points for lists.
         
-        --- GENERAL RULES ---
-        - Get straight to the point and avoid conversational fluff.
-        - Use bulleted lists (\`- Item\`) for lists and bold (\`**text**\`) for key terms.
-        - If you cannot answer based on the knowledge base, say: "Sorry, I only have information about Villa Oasis. I can't answer that."
-        
-        --- KNOWLEDGE BASE ---
-        ${knowledgeBase}
-        --- END KNOWLEDGE BASE ---
+        --- RELEVANT CONTEXT ---
+        ${relevantContext}
+        --- END RELEVANT CONTEXT ---
         `;
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4-turbo-preview",
             messages: [
                 { role: "system", content: systemPrompt },
-                ...history
+                ...history // We still send history for conversational context
             ],
-            temperature: 0.2, // Slightly increased for better natural language on redirection
-            max_tokens: 180,
+            temperature: 0.2,
+            max_tokens: 200,
         });
 
         const aiResponse = completion.choices[0].message.content;
 
         return res.status(200).json({ answer: aiResponse });
 
-    } catch (error) {
-        console.error("Error inside the Vercel function:", error);
+    } catch (error)
+    {
+        console.error("Error inside the Vercel RAG function:", error);
         return res.status(500).json({ error: "Something went wrong with the AI. Please try again." });
     }
 }
