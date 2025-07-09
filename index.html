@@ -310,10 +310,11 @@
             <!-- 7. FINAL CTA / EMAIL CAPTURE -->
             <section id="cta" class="cta-section">
                 <div class="container cta-container" data-reveal>
-                    <h2>Ready to Upgrade Your Guest Experience?</h2>
-                    <p>Join hosts in Bali, Tulum & Phuket. Get early access and we'll send you a link to create your own live demo.</p>
-                    <form class="cta-form">
-                        <input type="email" placeholder="you@youremail.com" required>
+                    <h2>Be the First to Use Staxy.</h2>
+                    <p>We're launching soon. Join the waitlist to get exclusive early access and a special 50% discount on your first 3 months.</p>
+                    <form class="cta-form" id="early-access-form" name="early-access" netlify>
+                        <input type="hidden" name="plan" value="Early Access Waitlist">
+                        <input type="email" name="email" placeholder="you@youremail.com" required>
                         <button type="submit" class="btn btn-primary">Get Early Access <i data-feather="arrow-right"></i></button>
                     </form>
                 </div>

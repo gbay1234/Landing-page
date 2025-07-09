@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- NON-CHAT RELATED CODE (No changes here) ---
+    // --- NON-FORM-RELATED CODE (HEADER SCROLL, REVEAL, UPSELL BUILDER, AI CHAT) ---
     const header = document.querySelector('.main-header');
     const handleScroll = () => {
         if (window.scrollY > 20) {
@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => { revealObserver.observe(el); });
     }
 
-    // --- UPSELL BUILDER LOGIC FOR PHONE MOCKUP (REVISED HTML STRUCTURE) ---
     const upsellBuilderItems = document.querySelectorAll('#upsell-builder .builder-item');
     const liveUpsellContainer = document.getElementById('live-upsell-items');
     if (upsellBuilderItems.length > 0 && liveUpsellContainer) {
@@ -42,39 +41,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 let tagsHTML = tags.map(tag => `<span class="item-tag tag-${tag.toLowerCase().trim()}">${tag}</span>`).join('');
                 const card = document.createElement('div');
                 card.classList.add('upsell-item-card');
-
-                // NEW HTML structure to group title/button on one row
-                card.innerHTML = `
-                    <img src="${img}" alt="${name}" class="item-image">
-                    <div class="item-details">
-                        <div class="item-header">
-                            <div class="item-title-wrapper">
-                                <div class="item-tags">${tagsHTML}</div>
-                                <h4>${name}</h4>
-                            </div>
-                            <button class="item-add-btn"><i data-feather="plus"></i></button>
-                        </div>
-                        <p>${desc}</p>
-                        <span class="item-price">${price}</span>
-                    </div>`;
-                
+                card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-header"><div class="item-title-wrapper"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4></div><button class="item-add-btn"><i data-feather="plus"></i></button></div><p>${desc}</p><span class="item-price">${price}</span></div>`;
                 liveUpsellContainer.appendChild(card);
                 feather.replace();
             });
         });
     }
 
-    // --- AI CHAT WITH CORRECTED MEMORY LOGIC ---
     const chatMessages = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const chatSuggestionsContainer = document.getElementById('chat-suggestions');
-
     if (chatMessages && chatForm && chatInput && chatSuggestionsContainer) {
-        
         let chatHistory = [];
         const converter = new showdown.Converter(); 
-
         const displayMessage = (htmlContent, sender) => {
             const messageElement = document.createElement('div');
             messageElement.classList.add('chat-message', sender);
@@ -83,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return messageElement;
         };
-        
         const displayThinking = () => {
             const thinkingElement = document.createElement('div');
             thinkingElement.classList.add('chat-message', 'bot', 'thinking');
@@ -92,39 +71,22 @@ document.addEventListener('DOMContentLoaded', () => {
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return thinkingElement;
         };
-
         const handleUserInput = async (text) => {
             if (!text.trim()) return;
             chatHistory.push({ role: 'user', content: text });
             displayMessage(text, 'user');
             chatInput.value = '';
             const thinkingMessage = displayThinking();
-            try {
-                const response = await fetch('/api/server.js', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ history: chatHistory }),
-                });
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                const aiResponseMarkdown = data.answer;
+            // This is a placeholder for your actual API call. We'll simulate a response.
+            setTimeout(() => {
+                thinkingMessage.remove();
+                const aiResponseMarkdown = "Thanks for testing the chat! This feature is coming soon. Sign up for the waitlist to be notified!";
                 chatHistory.push({ role: 'assistant', content: aiResponseMarkdown });
                 const aiResponseHtml = converter.makeHtml(aiResponseMarkdown);
-                thinkingMessage.remove();
                 displayMessage(aiResponseHtml, 'bot');
-            } catch (error) {
-                console.error('Error fetching AI response:', error);
-                thinkingMessage.remove();
-                displayMessage("Sorry, I'm having trouble connecting. Please try again.", 'bot');
-                chatHistory.pop();
-            }
+            }, 1500);
         };
-
-        chatForm.addEventListener('submit', (e) => { 
-            e.preventDefault(); 
-            handleUserInput(chatInput.value); 
-        });
-
+        chatForm.addEventListener('submit', (e) => { e.preventDefault(); handleUserInput(chatInput.value); });
         const suggestions = ["What's the wifi password?", "Can I get a late checkout?", "Recommend a good restaurant"];
         suggestions.forEach(suggestion => {
             const chip = document.createElement('div');
@@ -133,18 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
             chip.addEventListener('click', () => handleUserInput(suggestion));
             chatSuggestionsContainer.appendChild(chip);
         });
-        
         const initialMessageMarkdown = "Hi there! I'm your virtual concierge for the villa. Ask me anything about your stay.";
         chatHistory.push({ role: 'assistant', content: initialMessageMarkdown });
         const initialMessageHtml = converter.makeHtml(initialMessageMarkdown);
         displayMessage(initialMessageHtml, 'bot');
     }
 
-    // --- MODAL LOGIC ---
-    const pricingButtons = document.querySelectorAll('.pricing-card .btn[data-plan]');
+    // --- CONSOLIDATED FORM HANDLING & MODAL LOGIC ---
     const modalOverlay = document.getElementById('founding-member-modal');
-
-    if (modalOverlay && pricingButtons.length > 0) {
+    if (modalOverlay) {
         const modalContentWrapper = document.getElementById('modal-content-wrapper');
 
         const hideModal = () => {
@@ -152,18 +111,32 @@ document.addEventListener('DOMContentLoaded', () => {
             modalOverlay.setAttribute('aria-hidden', 'true');
         };
 
-        const showModal = (planName) => {
+        const showModalSuccess = (planName, email) => {
+            const confirmationHTML = `
+                <button class="modal-close" aria-label="Close modal">×</button>
+                <div class="modal-icon" style="background-color: #22c55e;"><i data-feather="check-circle"></i></div>
+                <h2 class="modal-title">You're on the list!</h2>
+                <p class="modal-text">Awesome! Your spot for the <strong>${planName}</strong> plan is secured. We'll notify you at:</p>
+                <div class="email-confirmation-box"><strong>${email}</strong></div>
+                <button class="btn btn-primary" id="final-close-btn">Sounds Good</button>
+            `;
+            modalContentWrapper.innerHTML = confirmationHTML;
+            feather.replace();
+            modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
+            modalContentWrapper.querySelector('#final-close-btn').addEventListener('click', hideModal);
+        };
+        
+        const showModalForm = (planName) => {
             const formHTML = `
                 <button class="modal-close" aria-label="Close modal">×</button>
-                <div class="modal-icon">
-                    <i data-feather="key"></i>
-                </div>
-                <h2 class="modal-title">Welcome, Founding Member!</h2>
+                <div class="modal-icon"><i data-feather="key"></i></div>
+                <h2 class="modal-title">Claim Your Founding Offer</h2>
                 <p class="modal-text">
-                    Thank you for choosing the <strong>${planName}</strong> plan! Our Founding Member program is now full, but because you showed interest early, we've reserved a spot just for you with a <strong>50% lifetime discount</strong>.
+                    You've selected the <strong>${planName}</strong> plan. Enter your email to lock in your spot and a <strong>50% lifetime discount</strong> as a founding member.
                 </p>
-                <form class="modal-form" id="modal-claim-form">
-                    <input type="email" id="modal-email-input" placeholder="Enter your email to claim" required>
+                <form class="modal-form" id="modal-claim-form" name="plan-claim" netlify>
+                    <input type="hidden" name="plan" value="${planName}">
+                    <input type="email" name="email" id="modal-email-input" placeholder="Enter your email to claim" required>
                     <button type="submit" class="btn btn-primary">Claim My 50% Discount</button>
                 </form>
             `;
@@ -171,60 +144,64 @@ document.addEventListener('DOMContentLoaded', () => {
             modalOverlay.classList.add('is-visible');
             modalOverlay.setAttribute('aria-hidden', 'false');
             feather.replace();
+            
             const emailInput = document.getElementById('modal-email-input');
-            if (emailInput) {
-                emailInput.focus();
-            }
+            if (emailInput) emailInput.focus();
+            
             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
+
             modalContentWrapper.querySelector('#modal-claim-form').addEventListener('submit', (e) => {
                 e.preventDefault();
-                const submittedEmail = emailInput.value;
-                if (submittedEmail) {
-                    handleFormSuccess(planName, submittedEmail);
-                }
+                const form = e.target;
+                const formData = new FormData(form);
+                const submittedEmail = formData.get('email');
+
+                // For Netlify, the submission is handled automatically. This fetch is for other services.
+                // We'll just show the success state.
+                fetch("/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(formData).toString()
+                }).then(() => {
+                    console.log("Modal form submitted successfully");
+                    showModalSuccess(planName, submittedEmail);
+                }).catch(error => alert(error));
             });
         };
-        
-        const handleFormSuccess = (planName, email) => {
-             console.log(`Email submitted for ${planName} plan discount: ${email}`);
-             const confirmationHTML = `
-                <button class="modal-close" aria-label="Close modal">×</button>
-                <div class="modal-icon">
-                    <i data-feather="key"></i>
-                </div>
-                <h2 class="modal-title">Awesome!</h2>
-                <p class="modal-text">Your 50% discount for the <strong>${planName}</strong> plan is secured. We've sent a confirmation to your inbox.</p>
-                <div class="email-confirmation-box">
-                    We'll notify you at: <strong>${email}</strong>
-                </div>
-                <button class="btn btn-primary" id="final-close-btn">I'll Watch My Inbox</button>
-             `;
-             modalContentWrapper.innerHTML = confirmationHTML;
-             feather.replace();
-             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
-             modalContentWrapper.querySelector('#final-close-btn').addEventListener('click', hideModal);
-        };
 
+        const pricingButtons = document.querySelectorAll('.pricing-card .btn[data-plan]');
         pricingButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
                 const plan = button.dataset.plan;
-                if (plan) {
-                    showModal(plan);
-                }
+                if (plan) showModalForm(plan);
             });
         });
 
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                hideModal();
-            }
-        });
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('is-visible')) hideModal(); });
+    }
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modalOverlay.classList.contains('is-visible')) {
-                hideModal();
-            }
+    const earlyAccessForm = document.getElementById('early-access-form');
+    if (earlyAccessForm) {
+        earlyAccessForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const userEmail = formData.get('email');
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            }).then(() => {
+                console.log("Early access form submitted successfully");
+                const ctaContainer = document.querySelector('.cta-container');
+                if (ctaContainer) {
+                    const successMessageHTML = `<div style="text-align: center; opacity: 0; transform: translateY(20px); animation: fadeIn 0.5s forwards;"><h2 style="font-family: var(--font-display); font-size: clamp(2rem, 6vw, 2.75rem); line-height: 1.2; margin-bottom: 15px; color: white;">You're on the list! ✅</h2><p style="font-size: 1.125rem; opacity: 0.8; max-width: 550px; margin: 0 auto 30px;">Thank you for your interest! We've saved your spot. We'll send an email to <strong>${userEmail}</strong> as soon as we're ready for our first hosts.</p></div><style>@keyframes fadeIn{to{opacity:1;transform:translateY(0);}}</style>`;
+                    ctaContainer.innerHTML = successMessageHTML;
+                }
+            }).catch(error => alert(error));
         });
     }
 });
