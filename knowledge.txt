@@ -1,18 +1,766 @@
---- VILLA OASIS KNOWLEDGE BASE ---
+🏝️ VILLA OASIS – AI CHATBOT KNOWLEDGE BASE (FULL MOCK VERSION)
+🔑 CORE DETAILS
+Villa Name: Villa Oasis
 
-## Core Information
-- Villa Name: Villa Oasis
-- Location: Canggu, Bali
-- Host Contact: The host can be contacted via the app for emergencies. For general questions, please use this AI chat first.
+Location: Canggu, Bali
 
-## Check-in & Check-out
-- Standard Check-in time: After 2:00 PM.
-- Standard Check-out time: Before 11:00 AM.
-- Late Checkout Policy: Late checkout is sometimes possible until 1:00 PM for a small fee, but it depends on the arrival of the next guests. Guests must request it, and the host will confirm availability.
+Time Zone: GMT+8 (Bali)
 
-## Amenities & Guides
-- WiFi Network Name: VillaGuest-5G
-- WiFi Password: Paradise2025
-- Air Conditioning (AC): The remote controls are in each bedroom. Please turn off the AC when you leave the room to conserve energy.
-- Pool: The pool is available 24/7. Pool towels are in the large basket by the sliding glass door. Please do not take room towels to the pool.
-- Kitchen: The kitchen is fully equipped. Please clean up after use.
+Currency: Indonesian Rupiah (IDR)
+
+Languages Spoken: English, Bahasa Indonesia
+
+Emergency Contact: Host can be contacted via the app in emergencies
+
+For General Help: Use this chat
+
+🕒 CHECK-IN / CHECK-OUT
+Check-in Time: After 2:00 PM
+
+Check-out Time: Before 11:00 AM
+
+Early Check-in: Subject to availability, possible from 12 PM for a fee (250K IDR)
+
+Late Checkout: Until 1:00 PM if available, for 250K IDR
+
+Self Check-in: Yes, via smart lock. Code sent on morning of arrival.
+
+📶 WIFI
+Network Name: VillaGuest-5G
+
+Password: Paradise2025
+
+Backup Router: In case of issues, the backup router is located in the living room.
+
+🧼 CLEANING
+Daily Cleaning: Yes, every day between 11 AM – 2 PM
+
+Extra Cleaning: Available on request
+
+Towel Replacement: Every 2 days or upon request
+
+Laundry Service: Available for 50K IDR/kg, returned in 24 hrs
+
+Iron/Ironing Board: Available on request
+
+🛌 BEDROOMS & BATHROOMS
+Number of Bedrooms: 2
+
+Number of Bathrooms: 2.5
+
+Hot Water: Yes, solar-powered
+
+Hairdryer: Located in bottom drawer of master bedroom vanity
+
+Bathroom Amenities: Shampoo, conditioner, body wash, hand soap, cotton buds, and bath bombs
+
+Toilet Paper: Refilled daily
+
+Extra Blankets/Pillows: Inside wardrobe
+
+❄️ AIR CONDITIONING
+Units: One in each bedroom
+
+Remote: On each bedside table
+
+Reminder: Please turn off when leaving to conserve energy
+
+🏊 POOL & OUTDOOR AREA
+Opening Hours: 24/7
+
+Depth: 1.5 meters
+
+Pool Towels: In basket by sliding glass door
+
+Floats: Available in storage box
+
+Night Swimming: Allowed (pool lights auto-on)
+
+No lifeguard on duty
+
+🍳 KITCHEN
+Appliances: Fridge, blender, toaster, kettle, microwave, gas stove
+
+Drinking Water: Filtered water provided
+
+Coffee & Tea: Complimentary welcome pack included
+
+Basic Condiments: Salt, pepper, oil
+
+Cookware & Utensils: Fully stocked
+
+Cleaning: Please clean up after yourself
+
+📺 ENTERTAINMENT & TECH
+TV: Smart TV in living room
+
+Streaming: Netflix, Disney+, YouTube (already logged in)
+
+Bluetooth Speaker: Available in kitchen drawer
+
+Power Adapters: Universal adapter provided in each bedroom
+
+USB Charging Ports: Built into each nightstand
+
+🧘‍♀️ WELLNESS & RELAXATION
+Massage Booking: Yes, from 9 AM to 7 PM – 1 hour massage = 250K IDR
+
+Yoga Mat: In hallway closet
+
+Bathtub: Yes, with included bath bomb
+
+Essential Oils: Lavender and lemongrass available in spa drawer
+
+🛵 TRANSPORT & TOURS
+Scooter Rental: 100K IDR/day – helmet included
+
+Taxi Booking: Staff can help or use Grab
+
+Airport Transfer: 350K IDR (ask 24 hrs in advance)
+
+Tours Available:
+
+Ubud Day Trip (Monkey Forest, Rice Terraces)
+
+Waterfall Tour
+
+Nusa Penida Snorkeling Trip
+
+Custom Tours available
+
+🍽️ FOOD & DRINK
+Breakfast: Not included, but nearby cafe delivers
+
+Private Chef: Available for dinner (book 1 day ahead)
+
+Mini Bar: Beer, Coke, Sprite, Bintang Radler – refilled daily
+
+Restaurants Nearby:
+
+Crate Café (5 mins)
+
+Mason (7 mins)
+
+Bottega Italiana (3 mins)
+
+Food Delivery: GrabFood, Gojek work well in the area
+
+🛍️ SHOPPING & CONVENIENCE
+Nearest Mini Mart: 3 mins walk
+
+Supermarket: Pepito Market (7 mins by bike)
+
+Pharmacy: Kimia Farma (5 mins)
+
+ATM: BCA ATM 4 mins away
+
+SIM Card: Telkomsel & XL available at Circle K nearby
+
+🧳 MISCELLANEOUS GUEST QUESTIONS
+"Can I host a party?"
+No events or parties are allowed without prior approval. Noise must be kept down after 10 PM. Violation = immediate cancellation.
+
+"Can I bring my pet?"
+Unfortunately, pets are not allowed.
+
+"Do you provide baby cots or high chairs?"
+Yes, we provide both on request.
+
+"What if I break something?"
+Please inform the host. Minor accidents are understandable. Major damages may incur a fee.
+
+"Is the villa suitable for remote work?"
+Yes. Fast WiFi, ergonomic chair, quiet environment.
+
+"Is the tap water safe?"
+No. Only use the filtered water provided for drinking or brushing teeth.
+
+"Are the power plugs different?"
+Indonesia uses Type C and F plugs (European). Adapters provided.
+
+🧯 SAFETY & EMERGENCIES
+Fire Extinguisher: Under kitchen sink
+
+First Aid Kit: Kitchen drawer
+
+Security: Private gate, CCTV outside
+
+Emergency Numbers:
+
+Medical: 118
+
+Police: 110
+
+Fire: 113
+
+🐒 CURVEBALL & FUNNY QUESTIONS (HANDLED LIKE A PRO)
+"Can I ride a dolphin here?"
+No dolphins in Canggu. Closest place to see them is Lovina Beach (3 hrs away).
+
+"Can I smoke inside?"
+No indoor smoking. Feel free to smoke in the garden or pool area.
+
+"Is this villa haunted?"
+Only by the ghosts of past guests who didn’t want to leave. (No, it’s not haunted.)
+
+"Do you have monkey-proof doors?"
+No monkeys in this part of Canggu. You’re safe.
+
+"Is the villa volcano-proof?"
+Yes. It’s located far from any active volcanoes.
+
+"Do the toilets have bidets?"
+Yes, all toilets have handheld bidet hoses.
+
+🔄 REBOOKING / CANCELLATION
+Flexible Rate: Free cancellation up to 7 days before check-in
+
+Non-Refundable Rate: Cheaper, but no refunds
+
+Change of Dates: Possible if available, contact host
+
+🧳 PACKING, WEATHER & LOCAL LIFE
+"What should I pack for Bali?"
+Light clothes (linen/cotton), swimsuit, flip-flops
+
+Sunscreen (reef-safe preferred)
+
+Mosquito repellent
+
+Poncho or umbrella (rainy season: Nov–Mar)
+
+Small power bank for day trips
+
+Adapter (Euro plugs, but we provide some)
+
+"What’s the weather like?"
+Dry season: Apr–Oct (hot, sunny, 28–33°C)
+
+Wet season: Nov–Mar (hot, humid, short rains)
+
+Evenings are warm year-round
+
+"Will I need a jacket?"
+Only if you plan to go up a volcano or hit AC-heavy restaurants. Otherwise, nope.
+
+"What about earthquakes?"
+Minor tremors are rare but normal in Bali. The villa is solid and built to handle them.
+
+🌍 LOCAL CULTURE & CUSTOMS
+"Can I wear a bikini anywhere?"
+Yes, on beaches and the villa. But please dress modestly when visiting temples or villages.
+
+"Do I need to tip?"
+Tipping is appreciated but not required. 5–10% is standard for restaurants or massages.
+
+"Can I flush toilet paper?"
+No. Like most places in Bali, please use the bin next to the toilet. The plumbing isn’t built for paper.
+
+"Are there ceremonies?"
+Yes, often! You might see locals in temple dress, parades, or offerings on the ground — don’t step on them.
+
+👨‍👩‍👧‍👦 FAMILY QUESTIONS
+"Is this villa kid-friendly?"
+Yes! The pool has steps, we offer baby cots, high chairs, and have child-safe electrical outlets.
+
+"Do you have toys or games?"
+We have:
+
+Uno
+
+Jenga
+
+Card deck
+
+Coloring books (on request)
+
+"Can you help with babysitting?"
+Yes, babysitter available for 120K/hour. Must book 24 hours in advance.
+
+👔 WORKING REMOTELY
+"How fast is the WiFi?"
+75 Mbps download / 20 Mbps upload (average)
+
+Suitable for Zoom, Netflix, uploading files
+
+"Any workspace?"
+Yes — large table, ergonomic chair, and strong lighting. Coffee is only steps away.
+
+🐜 WILDLIFE & BUGS
+"There’s a gecko in my room!"
+They’re harmless and common in Bali. They eat mosquitoes. Think of them as your personal security team.
+
+"Do you have mosquitoes?"
+Yes, sometimes at night. We provide:
+
+Mosquito coils
+
+Electric plug-in repellents
+
+Spray
+
+"Are there snakes?"
+Very rare in this area. But you’re in the tropics, so never leave doors open at night.
+
+🧭 LOCATION & NEARBY SPOTS
+Beach: 5 min by bike (Batu Bolong or Echo Beach)
+
+Gym: Avenue Fitness or Body Factory (7 min)
+
+Coworking: BWork, Outpost
+
+Nightlife: Old Man’s, La Brisa, Deus, Pretty Poison
+
+Spiritual stuff: The Practice yoga, Pyramids of Chi (Ubud)
+
+🛒 GROCERY LISTS & VILLA STOCK
+"Do you have snacks?"
+We stock:
+
+Local chips (Chitato, Taro)
+
+Chocolate (SilverQueen)
+
+Cup noodles
+
+Bintang, Radler
+
+Bottled water
+
+"What’s not included?"
+Toothbrush
+
+Razor/shaver
+
+Specialty milk (oat, almond – buy from Pepito)
+
+🧘‍♂️ HEALTH, SAFETY & MEDICAL
+"Where’s the nearest doctor?"
+Canggu Medical: 24/7 clinic, 10 min drive
+Siloam Hospital in Denpasar for emergencies
+
+"Do you have a first aid kit?"
+Yes, with:
+
+Bandages
+
+Alcohol wipes
+
+Paracetamol
+
+Mosquito bite cream
+
+Burn ointment
+
+"Can I get medication delivered?"
+Yes – use GoMed on Gojek or ask staff.
+
+💸 PAYMENT & MONEY STUFF
+"Can I pay for extras with card?"
+Yes, most extras can be charged to your booking or paid via QRIS (Indo digital pay).
+
+"Where can I withdraw cash?"
+BCA ATM (accepts Visa/MC) – 4 mins away
+Avoid ATMs attached to small shops.
+
+"Do you accept foreign currency?"
+No, please pay in IDR. You can exchange at a nearby money changer (we’ll point you to a safe one).
+
+🧠 “WEIRD GUEST” SECTION
+"Can I bring a local girl/guy back to the villa?"
+As long as it’s legal, respectful, and not disruptive — we don’t judge. Just no loud parties.
+
+"Can I rent a drone?"
+Yes, but flying around residential areas is limited. You can use it on the beach (not inside the villa grounds).
+
+"I locked myself out — now what?"
+If it's during the day, ask staff or message host. After hours, use the backup lockbox.
+
+"I saw a frog in the bathroom!"
+Welcome to Bali! Frogs are harmless and bring good luck. Close the bathroom door if it bothers you.
+
+"Can I tan naked?"
+You can… but at your own risk. The villa is private, but not 100% hidden from above.
+
+📅 EVENTS, PHOTOSHOOTS & SPECIAL REQUESTS
+"Can I have a photoshoot here?"
+Yes – for private/personal use. Commercial shoots must be approved. Fee may apply.
+
+"Can you help me propose to my partner?"
+Yes! We offer a full Proposal Package:
+
+Rose petals
+
+LED "Marry Me" sign
+
+Candles
+
+Bottle of wine
+
+Private dinner setup
+(Rates on request)
+
+"Do you offer romantic packages?"
+Yes:
+
+Flower petals on bed + tub
+
+Bottle of wine
+
+Teddy bear + balloons
+
+🌐 GENERAL TECH & TROUBLESHOOTING
+"The TV isn’t working!"
+Try these steps:
+
+Is it plugged in?
+
+Press the red button on the remote.
+
+If Netflix is logged out, use the Guest Login provided in the house manual.
+
+Still not working? Message the host.
+
+"The lights flickered, is the power out?"
+PLN (Bali’s power company) sometimes does short outages. Power returns in 5–10 mins. If it’s longer, we’ll update you.
+
+🕵️‍♂️ HIDDEN GUEST KNOWLEDGE (ONLY INSIDERS KNOW)
+"What’s something not in the welcome book?"
+The back garden bench has the strongest WiFi for video calls.
+
+The shower pressure improves if you wait 2 minutes after turning it on.
+
+The pool gets direct sun from 10:30 AM – 3:00 PM. Best tanning window.
+
+The neighbors have a rooster. Best defense: close windows, white noise playlist on Spotify.
+
+There’s a tiny nook behind the living room daybed — perfect for storing luggage or hiding gifts.
+
+"How can I spot the best stars?"
+Walk to the end of the gang (alley) at night and turn off your flashlight. Little to no light pollution — epic stars on clear nights.
+
+"When does the temple music play?"
+Most mornings around 6–7 AM, and during Balinese holy days (Odalan, Galungan). Just smile and soak in the vibe.
+
+🌅 SECRET BEACHES, SUNSETS & LOCAL SPOTS
+🔥 Best Sunset Spots
+La Brisa Beach Club (15 mins): Iconic Canggu sunset over Echo Beach
+
+The Lawn (10 mins): Fancy, cocktails, bean bags, influencers
+
+Nelayan Beach (8 mins): Chill, fewer crowds, bring your own Bintang
+
+Old Man’s (10 mins): Classic surf bar with epic views
+
+🏖️ Hidden Beaches
+Pererenan Beach: Less crowded than Batu Bolong, nice for strolls
+
+Berawa Beach: Smooth sand, better for longer walks or morning jogs
+
+Seseh Beach (25 mins): Real local vibes, zero tourists, wild waves
+
+📸 Instagram Spots Nearby
+The shortcut road with rice field view (motorbike access only)
+
+Rice paddies behind Sensorium Café
+
+The heart swing at La Brisa (free if you buy a drink)
+
+💍 ROMANTIC & SPECIAL VIBES
+"Best sunset date idea?"
+Walk to Echo Beach with cold beers in hand
+
+Sit on the rocks, barefoot
+
+Watch the sun drop
+
+Walk back via shortcut and order food to the villa
+
+End with a bath + bath bomb + speaker playlist
+
+"Can you do a honeymoon setup?"
+Yes:
+
+Custom flower petals on bed or tub
+
+Scented candles
+
+LED “LOVE” or “❤️” sign
+
+Romantic welcome message on mirror
+
+Optional add-on: Floating breakfast, couples massage
+
+🧾 BOOKING DETAILS (FULL STACK INFO)
+📅 Booking Methods
+Airbnb, Booking.com, Direct (via our site or WhatsApp)
+
+We recommend direct booking for lower fees + special perks
+
+💰 Direct Booking Perks
+FREE couples massage (valued at 250K)
+
+Flexible check-in/check-out when possible
+
+Bottle of wine or basket of fruit on arrival
+
+Priority on special requests
+
+🧾 What’s Included
+Entire private villa
+
+Daily cleaning
+
+WiFi, air con, streaming services
+
+Pool, towels, toiletries
+
+Filtered drinking water
+
+Access to host concierge service
+
+📋 What’s Not Included
+Breakfast
+
+Laundry
+
+Scooter rental
+
+Airport transfers (available at extra charge)
+
+📌 Booking Policy Overview
+Feature	Policy
+Cancellation (Flexible)	Free until 7 days before check-in
+Cancellation (Non-Refund)	No refund after booking
+Deposit	No deposit for OTAs / 30% for direct bookings
+Balance Due	Paid in full before arrival
+Guest ID Required	Yes, for local regulations
+Max Guests	4 guests total (no exceptions)
+Extra Guest Fee	150K/night (if allowed by host)
+Smoking Policy	Outside only
+Noise Policy	Quiet after 10 PM
+Party Policy	Strictly no parties without prior approval
+
+🔧 MAINTENANCE & EMERGENCY TRICKS
+"Toilet not flushing right?"
+Hold the flush button longer — it’s a water-saving design. Still stuck? Message the host.
+
+"Water suddenly cold?"
+Wait 3–5 minutes, then try again. It’s solar — occasional fluctuations happen at night or cloudy days.
+
+"AC not working?"
+Check batteries in remote
+
+Close doors/windows
+
+Message staff — they’ll swap remotes or clean filter if needed
+
+"Bugs in the bathroom?"
+Common in Bali. Turn on the exhaust fan, spray under sink, and close drain when not in use.
+
+🧚 FUN EXTRAS YOU CAN REQUEST (HIDDEN MENU)
+Floating breakfast tray (250K)
+
+Pool flower decoration (500K+)
+
+Guitar delivery (yes, really)
+
+Birthday surprise setup
+
+Full fridge stock-up before arrival (based on your list)
+
+Ice delivery (for big nights in)
+
+Insta photographer for the day
+
+Local “warung tour” with a guide
+
+👽 WILD HYPOTHETICALS & AI FLEX QUESTIONS
+"What if I lose my key at 3 AM?"
+There’s a backup key in a lockbox. Host can also remote-unlock the smart door.
+
+"Can I get a tattoo delivered?"
+Believe it or not: yes. Mobile tattoo artists available — ask host.
+
+"Is there a coconut I can pick?"
+There’s a tall one near the wall, but no ladders included. Better idea: grab a cold one from the mini mart.
+
+"What if I get Bali belly?"
+We have electrolytes and charcoal tabs. We’ll also help organize a doctor visit if needed.
+
+"I’m getting married — can I rent out 2 villas?"
+Yes! We can help coordinate nearby villas for group bookings.
+
+🕐 BEFORE BOOKING
+“How far are you from the beach?”
+About 5 minutes by motorbike, or 15 minutes on foot. Closest beach: Batu Bolong.
+
+“Is there WiFi?”
+Yes, high-speed fiber optic — averages 70–80 Mbps. Perfect for working remotely or streaming.
+
+“Is breakfast included?”
+No, but we can recommend nearby cafes or organize delivery. Floating breakfast also available.
+
+“Do you offer airport pickup?”
+Yes, airport transfer is 350K IDR. We can organize pickup with your flight number.
+
+“Can I check in early / check out late?”
+Early check-in or late checkout is subject to availability. Usually available for 250K fee. Free if the villa’s empty before/after.
+
+“Is there parking for a car?”
+Yes, 1 car space available in front of the villa gate.
+
+“Can I book direct with you?”
+Yes. Direct bookings come with perks: free massage, better flexibility, and lower rates.
+
+🏁 DAY OF ARRIVAL
+“How do I check in?”
+Self check-in. We’ll send you the smart lock code and instructions on the morning of arrival.
+
+“What time is check-in?”
+From 2:00 PM onwards.
+
+“Where’s the villa located?”
+Full address: [mock location]
+Click here for Google Maps link: [Insert Link]
+
+“Can you send a location pin?”
+Yes! Here’s the drop pin: [Insert WhatsApp-ready link]
+
+🏠 ONCE THEY’RE INSIDE
+“Where’s the WiFi password?”
+On the fridge, and also:
+WiFi: VillaGuest-5G
+Password: Paradise2025
+
+“Where are the towels?”
+Pool towels: in basket by glass door.
+Bathroom towels: hanging in each room.
+Fresh ones provided daily or on request.
+
+“Do you have shampoo?”
+Yes! Shampoo, conditioner, body wash, and hand soap provided in each bathroom.
+
+“Where can I get drinking water?”
+Filtered dispenser in the kitchen.
+No need to buy bottled water.
+
+“Can we cook here?”
+Yes, fully equipped kitchen with stove, fridge, cookware, and utensils.
+
+“How do I turn on the hot water?”
+Just turn the shower on and wait 10–20 seconds. It’s solar-powered.
+
+“AC not working?”
+Try these steps:
+
+Check remote batteries.
+
+Close all windows and doors.
+
+Still hot? Message us — we’ll help immediately.
+
+🧼 HOUSEKEEPING
+“Do you clean the villa daily?”
+Yes. Daily cleaning between 11 AM – 2 PM. Just let us know if you want privacy.
+
+“Can you skip cleaning today?”
+Of course. Just send a message and we’ll let the staff know.
+
+“Do you do laundry?”
+Yes, laundry service is 50K/kg. Returned within 24–36 hours.
+
+🛵 SCOOTER & TRANSPORT
+“Can I rent a scooter?”
+Yes. 100K/day including helmets. Delivered to the villa.
+
+“Is it easy to get a Grab or Gojek?”
+Yes, very easy in this area. Just use the app or ask us to call one for you.
+
+“Do you have a driver?”
+Yes. Rates depend on destination:
+
+Airport: 350K
+
+Ubud: 600K round-trip
+
+Full-day Bali tour: 700K–900K
+
+📍LOCAL AREA
+“What restaurants are nearby?”
+Crate Café (famous breakfast) – 5 mins
+
+Mason (high-end Western) – 7 mins
+
+Bottega Italiana (Italian/pasta) – 3 mins
+
+Give Café (vegan/Instagrammable) – 4 mins
+
+“Any good bars or nightlife?”
+The Lawn, Old Man’s, SandBar, Pretty Poison — all within 10–15 minutes by bike
+
+“Where’s the nearest supermarket?”
+Pepito Market – 7 mins by bike
+
+Mini-marts on every corner for quick stuff
+
+“Where can I get a SIM card?”
+Circle K (2 mins walk) or SimPATI kiosk in Canggu Central
+
+💆‍♀️ SPA / MASSAGE / TOURS
+“Can I get a massage at the villa?”
+Yes. Traditional Balinese massage:
+250K for 60 mins / 350K for 90 mins
+9 AM – 7 PM daily. Book 1 hour ahead.
+
+“Do you offer any tours?”
+Yes! We can organize:
+
+Ubud Rice Terrace + Monkey Forest tour
+
+Waterfall and Temple Day
+
+Nusa Penida Snorkeling
+
+Full-day Driver with customizable stops
+
+🧯 ISSUES & EMERGENCIES
+“There’s a bug in my room.”
+Welcome to Bali 😅 We provide spray + repellent. Let us know if you want housekeeping to help.
+
+“Power went out!”
+Bali occasionally has quick blackouts. It usually comes back within 5–10 minutes. Message us if it lasts longer.
+
+“Toilet not flushing properly.”
+Hold the flush longer. Still stuck? We’ll send staff.
+
+📤 CHECK-OUT
+“What time is checkout?”
+11:00 AM standard.
+
+“Can I store my bags after checkout?”
+Yes, we’ll keep them safe until you leave later.
+
+“Can I take a shower after checkout?”
+If there’s no new guest immediately after, yes — just ask us.
+
+“How do I check out?”
+Just close the door and message us. We’ll handle the rest.
+
+🐣 ODD BUT COMMON
+“Can I bring friends over?”
+Yes, but only registered guests can stay overnight. No parties, please.
+
+“Do you have Netflix?”
+Yes, Smart TV with Netflix, Disney+, YouTube pre-logged in.
+
+“Where do I put my trash?”
+Kitchen bin for food waste
+
+Outside bin for general garbage — staff takes care of it daily
+
+“Are there mosquitoes?”
+Sometimes at night. Coils and electric repellents are provided in each room.
+
+
+
