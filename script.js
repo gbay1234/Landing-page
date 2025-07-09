@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => { revealObserver.observe(el); });
     }
 
-    // --- UPDATED UPSELL BUILDER LOGIC ---
+    // --- UPSELL BUILDER LOGIC FOR PHONE MOCKUP ---
     const upsellBuilderItems = document.querySelectorAll('#upsell-builder .builder-item');
     const liveUpsellContainer = document.getElementById('live-upsell-items');
     if (upsellBuilderItems.length > 0 && liveUpsellContainer) {
@@ -32,32 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('is-added')) return;
                 item.classList.add('is-added');
-                
                 const emptyState = liveUpsellContainer.querySelector('.empty-state');
                 if (emptyState) emptyState.remove();
-
                 const name = item.dataset.itemName;
                 const price = item.dataset.itemPrice;
                 const desc = item.dataset.itemDesc;
                 const img = item.dataset.itemImg;
                 const tags = item.dataset.itemTags.split(',');
-                
                 let tagsHTML = tags.map(tag => `<span class="item-tag tag-${tag.toLowerCase().trim()}">${tag}</span>`).join('');
-                
                 const card = document.createElement('div');
                 card.classList.add('upsell-item-card');
 
-                // NEW, spacious HTML structure for the card
-                card.innerHTML = `
-                    <img src="${img}" alt="${name}" class="item-image">
-                    <div class="item-details">
-                        <div class="item-tags">${tagsHTML}</div>
-                        <h4>${name}</h4>
-                        <p>${desc}</p>
-                        <span class="item-price">${price}</span>
-                    </div>
-                    <button class="item-add-btn"><i data-feather="plus"></i></button>
-                `;
+                // Correct HTML structure for the items WITHIN the phone mockup
+                card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4><p>${desc}</p><span class="item-price">${price}</span></div><button class="item-add-btn"><i data-feather="plus"></i></button>`;
                 
                 liveUpsellContainer.appendChild(card);
                 feather.replace();
@@ -73,11 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (chatMessages && chatForm && chatInput && chatSuggestionsContainer) {
         
-        // This array will now correctly store the entire conversation.
         let chatHistory = [];
-        const converter = new showdown.Converter(); // Create the converter once.
+        const converter = new showdown.Converter(); 
 
-        // A simplified function to just display a message.
         const displayMessage = (htmlContent, sender) => {
             const messageElement = document.createElement('div');
             messageElement.classList.add('chat-message', sender);
@@ -87,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return messageElement;
         };
         
-        // A dedicated function for the "thinking" bubble.
         const displayThinking = () => {
             const thinkingElement = document.createElement('div');
             thinkingElement.classList.add('chat-message', 'bot', 'thinking');
@@ -99,50 +83,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const handleUserInput = async (text) => {
             if (!text.trim()) return;
-
-            // 1. Add user's plain text message to history.
             chatHistory.push({ role: 'user', content: text });
-
-            // 2. Display the user's message (as plain text).
             displayMessage(text, 'user');
             chatInput.value = '';
-
-            // 3. Display the "thinking" bubble.
             const thinkingMessage = displayThinking();
-
             try {
-                // 4. Send the complete and correct history to the server.
                 const response = await fetch('/api/server.js', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ history: chatHistory }),
                 });
-
                 if (!response.ok) throw new Error('Network response was not ok');
-
                 const data = await response.json();
                 const aiResponseMarkdown = data.answer;
-
-                // 5. THIS IS THE CRITICAL FIX: Add the AI's raw response to history.
                 chatHistory.push({ role: 'assistant', content: aiResponseMarkdown });
-
-                // 6. Convert the AI's markdown response to clean HTML.
                 const aiResponseHtml = converter.makeHtml(aiResponseMarkdown);
-
-                // 7. Remove the "thinking" bubble and display the final AI message.
                 thinkingMessage.remove();
                 displayMessage(aiResponseHtml, 'bot');
-
             } catch (error) {
                 console.error('Error fetching AI response:', error);
                 thinkingMessage.remove();
                 displayMessage("Sorry, I'm having trouble connecting. Please try again.", 'bot');
-                // If the API call fails, remove the user's last message from history to prevent errors.
                 chatHistory.pop();
             }
         };
 
-        // --- Event Listeners and Initial Message ---
         chatForm.addEventListener('submit', (e) => { 
             e.preventDefault(); 
             handleUserInput(chatInput.value); 
@@ -157,14 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
             chatSuggestionsContainer.appendChild(chip);
         });
         
-        // Setup the initial bot message.
         const initialMessageMarkdown = "Hi there! I'm your virtual concierge for the villa. Ask me anything about your stay.";
         chatHistory.push({ role: 'assistant', content: initialMessageMarkdown });
         const initialMessageHtml = converter.makeHtml(initialMessageMarkdown);
         displayMessage(initialMessageHtml, 'bot');
     }
 
-    // --- NEW MODAL LOGIC ---
+    // --- MODAL LOGIC ---
     const pricingButtons = document.querySelectorAll('.pricing-card .btn[data-plan]');
     const modalOverlay = document.getElementById('founding-member-modal');
 
@@ -177,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const showModal = (planName) => {
-            // 1. Build the initial HTML for the form state
             const formHTML = `
                 <button class="modal-close" aria-label="Close modal">×</button>
                 <div class="modal-icon">
@@ -193,19 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </form>
             `;
             modalContentWrapper.innerHTML = formHTML;
-
-            // 2. Make the modal visible
             modalOverlay.classList.add('is-visible');
             modalOverlay.setAttribute('aria-hidden', 'false');
             feather.replace();
-
-            // 3. Focus the input field for accessibility
             const emailInput = document.getElementById('modal-email-input');
             if (emailInput) {
                 emailInput.focus();
             }
-
-            // 4. Add event listeners for the new content
             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
             modalContentWrapper.querySelector('#modal-claim-form').addEventListener('submit', (e) => {
                 e.preventDefault();
@@ -232,7 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
              `;
              modalContentWrapper.innerHTML = confirmationHTML;
              feather.replace();
-             
              modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
              modalContentWrapper.querySelector('#final-close-btn').addEventListener('click', hideModal);
         };
