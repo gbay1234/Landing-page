@@ -1,6 +1,7 @@
 {
   "name": "staxy-ai-server",
   "version": "1.0.0",
+  "type": "module",
   "description": "AI concierge server for Staxy",
   "main": "api/server.js",
   "scripts": {
