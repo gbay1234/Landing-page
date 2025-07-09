@@ -146,4 +146,100 @@ document.addEventListener('DOMContentLoaded', () => {
         const initialMessageHtml = converter.makeHtml(initialMessageMarkdown);
         displayMessage(initialMessageHtml, 'bot');
     }
+
+    // --- NEW MODAL LOGIC ---
+    const pricingButtons = document.querySelectorAll('.pricing-card .btn[data-plan]');
+    const modalOverlay = document.getElementById('founding-member-modal');
+
+    if (modalOverlay && pricingButtons.length > 0) {
+        const modalContentWrapper = document.getElementById('modal-content-wrapper');
+
+        const hideModal = () => {
+            modalOverlay.classList.remove('is-visible');
+            modalOverlay.setAttribute('aria-hidden', 'true');
+        };
+
+        const showModal = (planName) => {
+            // 1. Build the initial HTML for the form state
+            const formHTML = `
+                <button class="modal-close" aria-label="Close modal">×</button>
+                <div class="modal-icon">
+                    <i data-feather="key"></i>
+                </div>
+                <h2 class="modal-title">Welcome, Founding Member!</h2>
+                <p class="modal-text">
+                    Thank you for choosing the <strong>${planName}</strong> plan! Our Founding Member program is now full, but because you showed interest early, we've reserved a spot just for you with a <strong>50% lifetime discount</strong>.
+                </p>
+                <form class="modal-form" id="modal-claim-form">
+                    <input type="email" id="modal-email-input" placeholder="Enter your email to claim" required>
+                    <button type="submit" class="btn btn-primary">Claim My 50% Discount</button>
+                </form>
+            `;
+            modalContentWrapper.innerHTML = formHTML;
+
+            // 2. Make the modal visible
+            modalOverlay.classList.add('is-visible');
+            modalOverlay.setAttribute('aria-hidden', 'false');
+            feather.replace();
+
+            // 3. Focus the input field for accessibility
+            const emailInput = document.getElementById('modal-email-input');
+            if (emailInput) {
+                emailInput.focus();
+            }
+
+            // 4. Add event listeners for the new content
+            modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
+            modalContentWrapper.querySelector('#modal-claim-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const submittedEmail = emailInput.value;
+                if (submittedEmail) {
+                    handleFormSuccess(planName, submittedEmail);
+                }
+            });
+        };
+        
+        const handleFormSuccess = (planName, email) => {
+             console.log(`Email submitted for ${planName} plan discount: ${email}`);
+             const confirmationHTML = `
+                <button class="modal-close" aria-label="Close modal">×</button>
+                <div class="modal-icon">
+                    <i data-feather="key"></i>
+                </div>
+                <h2 class="modal-title">Awesome!</h2>
+                <p class="modal-text">Your 50% discount for the <strong>${planName}</strong> plan is secured. We've sent a confirmation to your inbox.</p>
+                <div class="email-confirmation-box">
+                    We'll notify you at: <strong>${email}</strong>
+                </div>
+                <button class="btn btn-primary" id="final-close-btn">I'll Watch My Inbox</button>
+             `;
+             modalContentWrapper.innerHTML = confirmationHTML;
+             feather.replace();
+             
+             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
+             modalContentWrapper.querySelector('#final-close-btn').addEventListener('click', hideModal);
+        };
+
+        pricingButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const plan = button.dataset.plan;
+                if (plan) {
+                    showModal(plan);
+                }
+            });
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                hideModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('is-visible')) {
+                hideModal();
+            }
+        });
+    }
 });
