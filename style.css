@@ -42,7 +42,7 @@ body {
 .main-header { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 16px 0; background-color: transparent; transition: all 0.3s ease; }
 .main-header.scrolled { background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--color-border); box-shadow: var(--shadow-sm); }
 .header-container { display: flex; justify-content: space-between; align-items: center; }
-.logo img { height: 32px; display: block; }
+.logo img { height: 32px; width: auto; display: block; }
 .main-nav { display: none; gap: 32px; }
 .main-nav a { color: var(--color-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
 .main-nav a:hover { color: var(--color-primary); }
@@ -62,7 +62,7 @@ body {
 @keyframes marquee-right { from { transform: translateX(-50%); } to { transform: translateX(0%); } }
 .benefit-card { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--border-radius); margin: 0 10px; flex-shrink: 0; }
 .card-icon { flex-shrink: 0; width: 40px; height: 40px; background: #EFF6FF; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.card-icon i { color: var(--color-primary); }
+.card-icon svg { color: var(--color-primary); }
 .card-text { text-align: left; }
 .card-text strong { display: block; font-size: 1rem; font-weight: 600; color: var(--color-secondary); white-space: nowrap; }
 .card-text span { font-size: 0.85rem; color: var(--color-text-light); white-space: nowrap; }
@@ -113,7 +113,7 @@ body {
 .item-details p { font-size: 0.825rem; color: var(--color-text-light); line-height: 1.45; margin: 0 0 8px 0; }
 .item-price { font-weight: 700; font-size: 0.9rem; color: var(--color-secondary); }
 .item-add-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--color-border); background: white; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; }
-.item-add-btn i { width: 16px; height: 16px; }
+.item-add-btn svg { width: 16px; height: 16px; }
 .item-add-btn:hover { transform: scale(1.1); background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
 .mockup-footer { display: flex; justify-content: space-around; background: #fff; border-top: 1px solid var(--color-border); padding: 5px 0; border-radius: 0 0 30px 30px; flex-shrink: 0; }
 .footer-nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--color-text-light); font-size: 0.7rem; padding: 5px; transition: color 0.2s; }
@@ -169,7 +169,7 @@ body {
 .pricing-card .plan-desc { color: var(--color-text-light); min-height: 40px; margin-bottom: 20px; font-size: 0.9rem; }
 .pricing-card ul { list-style: none; text-align: left; margin: 30px 0; padding-left: 0; }
 .pricing-card ul li { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-.pricing-card ul i { color: var(--color-primary); }
+.pricing-card ul svg { color: var(--color-primary); flex-shrink: 0; }
 .popular-badge { background: var(--color-primary); color: white; font-size: 0.8rem; font-weight: 600; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-bottom: 20px; }
 .pricing-guarantee { text-align: center; color: var(--color-text-light); display: flex; align-items: center; justify-content: center; gap: 10px; }
 .cta-section { padding: clamp(80px, 12vw, 120px) 0; background-color: var(--color-secondary); color: white; }
@@ -182,7 +182,7 @@ body {
 .cta-form button { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .main-footer { padding: 60px 0; background-color: var(--color-background-alt); }
 .footer-top { display: flex; flex-direction: column; align-items: center; gap: 20px; padding-bottom: 30px; margin-bottom: 30px; border-bottom: 1px solid var(--color-border); }
-.logo-footer img { height: 32px; }
+.logo-footer img { height: 32px; width: auto; }
 .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; }
 .footer-links a { color: var(--color-text-light); text-decoration: none; font-weight: 500; transition: color 0.2s; }
 .footer-links a:hover { color: var(--color-primary); }
@@ -217,7 +217,7 @@ body {
 .modal-close { position: absolute; top: 15px; right: 15px; background: transparent; border: none; font-size: 2rem; line-height: 1; color: var(--color-text-light); cursor: pointer; transition: color 0.2s; z-index: 10; }
 .modal-close:hover { color: var(--color-secondary); }
 .modal-icon { width: 64px; height: 64px; background-color: var(--color-primary); border-radius: 50%; margin: 0 auto 20px; display: flex; justify-content: center; align-items: center; color: white; }
-.modal-icon i { width: 32px; height: 32px; }
+.modal-icon svg { width: 32px; height: 32px; }
 .modal-title { font-family: var(--font-display); font-size: clamp(1.75rem, 5vw, 2.25rem); color: var(--color-secondary); margin-bottom: 1rem; line-height: 1.2; }
 .modal-text { color: var(--color-text); font-size: 1rem; line-height: 1.6; margin-bottom: 24px; max-width: 400px; margin-left: auto; margin-right: auto; }
 .modal-text strong { color: var(--color-secondary); font-weight: 600; }

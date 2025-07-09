@@ -40,11 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const img = item.dataset.itemImg;
                 const tags = item.dataset.itemTags.split(',');
                 let tagsHTML = tags.map(tag => `<span class="item-tag tag-${tag.toLowerCase().trim()}">${tag}</span>`).join('');
+                
+                // SVG for the plus icon. Using template literal for easier embedding.
+                const plusIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+
                 const card = document.createElement('div');
                 card.classList.add('upsell-item-card');
-                card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-header"><div class="item-title-wrapper"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4></div><button class="item-add-btn"><i data-feather="plus"></i></button></div><p>${desc}</p><span class="item-price">${price}</span></div>`;
+                card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-header"><div class="item-title-wrapper"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4></div><button class="item-add-btn">${plusIconSVG}</button></div><p>${desc}</p><span class="item-price">${price}</span></div>`;
                 liveUpsellContainer.appendChild(card);
-                feather.replace();
+                // No longer need feather.replace()
             });
         });
     }
@@ -159,25 +163,26 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const showModalSuccess = (planName, email) => {
+            const checkCircleSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>`;
             const confirmationHTML = `
                 <button class="modal-close" aria-label="Close modal">×</button>
-                <div class="modal-icon" style="background-color: #22c55e;"><i data-feather="check-circle"></i></div>
+                <div class="modal-icon" style="background-color: #22c55e;">${checkCircleSVG}</div>
                 <h2 class="modal-title">You're on the list!</h2>
                 <p class="modal-text">Awesome! Your offer for the <strong>${planName}</strong> plan is secured. We'll notify you at:</p>
                 <div class="email-confirmation-box"><strong>${email}</strong></div>
                 <button class="btn btn-primary" id="final-close-btn">Sounds Good</button>
             `;
             modalContentWrapper.innerHTML = confirmationHTML;
-            feather.replace();
             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
             modalContentWrapper.querySelector('#final-close-btn').addEventListener('click', hideModal);
         };
         
         const showModalForm = (planName) => {
+            const keyIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>`;
             // This HTML block now contains your specific Formspree endpoint
             const formHTML = `
                 <button class="modal-close" aria-label="Close modal">×</button>
-                <div class="modal-icon"><i data-feather="key"></i></div>
+                <div class="modal-icon">${keyIconSVG}</div>
                 <h2 class="modal-title">Claim Your Founding Offer</h2>
                 <p class="modal-text">
                     You've selected the <strong>${planName}</strong> plan. Enter your email to lock in your spot and a special founding member discount.
@@ -197,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
             modalContentWrapper.innerHTML = formHTML;
             modalOverlay.classList.add('is-visible');
             modalOverlay.setAttribute('aria-hidden', 'false');
-            feather.replace();
             
             const emailInput = document.getElementById('modal-email-input');
             if (emailInput) emailInput.focus();
