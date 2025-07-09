@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 // This now calls our LIVE Vercel server function
-const response = await fetch('/api/server', {
+const response = await fetch('/api/server.js', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
