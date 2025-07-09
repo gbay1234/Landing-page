@@ -1,6 +1,6 @@
-const OpenAI = require('openai');
-const path = require('path');
-const fs = require('fs').promises;
+import OpenAI from 'openai';
+import path from 'path';
+import { promises as fs } from 'fs';
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -8,6 +8,7 @@ const openai = new OpenAI({
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
+        res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
     }
 
