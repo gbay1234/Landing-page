@@ -2,7 +2,7 @@ const OpenAI = require('openai');
 const path = require('path');
 const fs = require('fs').promises;
 const Fuse = require('fuse.js');
-// const nlp = require('compromise'); <-- THIS UNUSED LINE IS NOW REMOVED
+const nlp = require('compromise'); // We are now using this library
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -28,11 +28,23 @@ export default async function handler(req, res) {
     const userQuestion = history[history.length - 1].content;
 
     try {
+        // --- STEP 1: RETRIEVAL (The SMART version) ---
         const knowledgeChunks = await getSearchableKnowledge();
-        const fuse = new Fuse(knowledgeChunks, { includeScore: true, threshold: 0.5 });
-        const searchResults = fuse.search(userQuestion);
-        const relevantContext = searchResults.slice(0, 4).map(result => result.item).join('\n\n');
+        
+        // --- NEW: Keyword Extraction ---
+        // Analyze the user's question to find the most important nouns/topics.
+        let doc = nlp(userQuestion);
+        let topics = doc.nouns().out('array');
+        // If no nouns found, just use the original question as a search query.
+        const searchQuery = topics.length > 0 ? topics.join(' ') : userQuestion;
 
+        // Use Fuse.js to search for the extracted keywords.
+        const fuse = new Fuse(knowledgeChunks, { includeScore: true, threshold: 0.4 });
+        const searchResults = fuse.search(searchQuery);
+
+        const relevantContext = searchResults.slice(0, 4).map(result => result.item).join('\n\n');
+        
+        // --- STEP 2: GENERATION (Unchanged) ---
         const systemPrompt = `You are a hyper-efficient AI concierge for 'Villa Oasis'. Your goal is to provide clear, concise answers based ONLY on the "RELEVANT CONTEXT" provided below.
         - First, analyze the user's conversation history for context.
         - Then, formulate your answer using the "RELEVANT CONTEXT".
