@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => { revealObserver.observe(el); });
     }
 
+    // --- UPDATED UPSELL BUILDER LOGIC ---
     const upsellBuilderItems = document.querySelectorAll('#upsell-builder .builder-item');
     const liveUpsellContainer = document.getElementById('live-upsell-items');
     if (upsellBuilderItems.length > 0 && liveUpsellContainer) {
@@ -31,17 +32,33 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('is-added')) return;
                 item.classList.add('is-added');
+                
                 const emptyState = liveUpsellContainer.querySelector('.empty-state');
                 if (emptyState) emptyState.remove();
+
                 const name = item.dataset.itemName;
                 const price = item.dataset.itemPrice;
                 const desc = item.dataset.itemDesc;
                 const img = item.dataset.itemImg;
                 const tags = item.dataset.itemTags.split(',');
+                
                 let tagsHTML = tags.map(tag => `<span class="item-tag tag-${tag.toLowerCase().trim()}">${tag}</span>`).join('');
+                
                 const card = document.createElement('div');
                 card.classList.add('upsell-item-card');
-                card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4><p>${desc}</p><span class="item-price">${price}</span></div><button class="item-add-btn"><i data-feather="plus"></i></button>`;
+
+                // NEW, spacious HTML structure for the card
+                card.innerHTML = `
+                    <img src="${img}" alt="${name}" class="item-image">
+                    <div class="item-details">
+                        <div class="item-tags">${tagsHTML}</div>
+                        <h4>${name}</h4>
+                        <p>${desc}</p>
+                        <span class="item-price">${price}</span>
+                    </div>
+                    <button class="item-add-btn"><i data-feather="plus"></i></button>
+                `;
+                
                 liveUpsellContainer.appendChild(card);
                 feather.replace();
             });
