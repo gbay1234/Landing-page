@@ -2,7 +2,7 @@ const OpenAI = require('openai');
 const path = require('path');
 const fs = require('fs').promises;
 const Fuse = require('fuse.js');
-const nlp = require('compromise');
+// const nlp = require('compromise'); <-- THIS UNUSED LINE IS NOW REMOVED
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -45,8 +45,7 @@ export default async function handler(req, res) {
         `;
 
         const completion = await openai.chat.completions.create({
-            // --- THIS IS THE ONLY CHANGE ---
-            model: "gpt-3.5-turbo", // Switched to the cheapest, most cost-effective model
+            model: "gpt-3.5-turbo",
             messages: [
                 { role: "system", content: systemPrompt },
                 ...history
