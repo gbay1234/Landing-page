@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('.main-header');
     
     // --- HEADER SCROLL BEHAVIOR ---
-    // Add/remove a class to the header for a subtle style change on scroll
     const handleScroll = () => {
         if (window.scrollY > 20) {
             header.classList.add('scrolled');
@@ -35,14 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('is-added')) return;
                 
-                // Mark the builder item as added
                 item.classList.add('is-added');
 
-                // Remove empty state if it exists
                 const emptyState = liveUpsellContainer.querySelector('.empty-state');
                 if (emptyState) emptyState.remove();
 
-                // Get data from the clicked item
                 const name = item.dataset.itemName;
                 const price = item.dataset.itemPrice;
                 const desc = item.dataset.itemDesc;
@@ -50,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tags = item.dataset.itemTags.split(',');
                 let tagsHTML = tags.map(tag => `<span class="item-tag tag-${tag.toLowerCase().trim()}">${tag}</span>`).join('');
 
-                // Create the new card element
                 const card = document.createElement('div');
                 card.classList.add('upsell-item-card');
                 card.innerHTML = `
@@ -64,50 +59,66 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="item-add-btn"><i data-feather="plus"></i></button>`;
                 
                 liveUpsellContainer.appendChild(card);
-                feather.replace(); // Re-render icons for the new element
+                feather.replace();
             });
         });
     }
 
-    // --- INTERACTIVE AI CHAT MOCKUP ---
+    // --- NEW & IMPROVED AI CHAT ---
     const chatMessages = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const chatSuggestionsContainer = document.getElementById('chat-suggestions');
     if (chatMessages && chatForm && chatInput && chatSuggestionsContainer) {
         const suggestions = ["What's the wifi password?", "Can I get a late checkout?", "Recommend a good restaurant"];
-        const cannedResponses = {
-            "default": "I'm not sure I understand. I can help with questions about your stay, like wifi, pool hours, or local recommendations. How can I assist?",
-            "wifi": "Of course! The wifi network is <strong>VillaGuest-5G</strong> and the password is <strong>Paradise2025</strong>.",
-            "checkout": "Late checkout may be possible depending on availability. Standard checkout is at 11 AM. I've notified the host of your request, and they will get back to you shortly.",
-            "restaurant": "For a great local experience, I recommend <strong>Seafood House</strong> by the beach. It's a 5-minute walk and has amazing fresh fish. I can even help you make a reservation!"
+
+        const displayMessage = (text, sender, isThinking = false) => {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', sender);
+            if(isThinking) {
+                messageElement.classList.add('thinking');
+                messageElement.innerHTML = `<span class="dot"></span><span class="dot"></span><span class="dot"></span>`;
+            } else {
+                 messageElement.innerHTML = text;
+            }
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageElement;
         };
 
-        const displayMessage = (text, sender, delay = 0) => {
-            setTimeout(() => {
-                const messageElement = document.createElement('div');
-                messageElement.classList.add('chat-message', sender);
-                messageElement.innerHTML = text;
-                chatMessages.appendChild(messageElement);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, delay);
-        };
-
-        const handleUserInput = (text) => {
+        const handleUserInput = async (text) => {
             if (!text.trim()) return;
             
             displayMessage(text, 'user');
             chatInput.value = '';
             
-            let response = cannedResponses.default;
-            const lowerCaseText = text.toLowerCase();
-            
-            if (lowerCaseText.includes('wifi')) { response = cannedResponses.wifi; } 
-            else if (lowerCaseText.includes('checkout')) { response = cannedResponses.checkout; } 
-            else if (lowerCaseText.includes('restaurant') || lowerCaseText.includes('food')) { response = cannedResponses.restaurant; }
-            
-            // Simulate bot thinking
-            setTimeout(() => { displayMessage(response, 'bot'); }, 800);
+            const thinkingMessage = displayMessage('', 'bot', true);
+
+            try {
+                // This now calls our LIVE Vercel server function
+                const response = await fetch('/ask-ai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question: text }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                const aiResponse = data.answer;
+
+                thinkingMessage.classList.remove('thinking');
+                thinkingMessage.innerHTML = aiResponse;
+
+            } catch (error) {
+                console.error('Error fetching AI response:', error);
+                thinkingMessage.classList.remove('thinking');
+                thinkingMessage.innerHTML = "Sorry, I'm having a little trouble connecting right now. Please try again in a moment.";
+            }
         };
 
         chatForm.addEventListener('submit', (e) => { 
@@ -123,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
             chatSuggestionsContainer.appendChild(chip);
         });
         
-        // Initial bot message
-        displayMessage("Hi there! I'm your virtual concierge for the villa. Ask me anything about your stay.", 'bot', 500);
+        displayMessage("Hi there! I'm your virtual concierge for the villa. Ask me anything about your stay.", 'bot');
     }
 });
