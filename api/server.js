@@ -2,16 +2,19 @@ const OpenAI = require('openai');
 const path = require('path');
 const fs = require('fs').promises;
 const Fuse = require('fuse.js');
-const nlp = require('compromise'); // We are now using this library
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
+// This function now creates an array of objects, which is better for searching.
 async function getSearchableKnowledge() {
     const knowledgeBasePath = path.join(process.cwd(), 'knowledge.txt');
     const knowledgeBase = await fs.readFile(knowledgeBasePath, 'utf-8');
-    const chunks = knowledgeBase.split(/\n\s*\n/).map(chunk => chunk.trim()).filter(Boolean);
+    const chunks = knowledgeBase.split(/\n\s*\n/)
+        .map(chunk => chunk.trim())
+        .filter(Boolean)
+        .map(chunk => ({ content: chunk })); // Create objects with a 'content' key
     return chunks;
 }
 
@@ -28,23 +31,20 @@ export default async function handler(req, res) {
     const userQuestion = history[history.length - 1].content;
 
     try {
-        // --- STEP 1: RETRIEVAL (The SMART version) ---
+        // --- STABLE AND RELIABLE RAG SEARCH ---
         const knowledgeChunks = await getSearchableKnowledge();
         
-        // --- NEW: Keyword Extraction ---
-        // Analyze the user's question to find the most important nouns/topics.
-        let doc = nlp(userQuestion);
-        let topics = doc.nouns().out('array');
-        // If no nouns found, just use the original question as a search query.
-        const searchQuery = topics.length > 0 ? topics.join(' ') : userQuestion;
-
-        // Use Fuse.js to search for the extracted keywords.
-        const fuse = new Fuse(knowledgeChunks, { includeScore: true, threshold: 0.4 });
-        const searchResults = fuse.search(searchQuery);
-
-        const relevantContext = searchResults.slice(0, 4).map(result => result.item).join('\n\n');
+        // This tells Fuse to search specifically within the 'content' of each chunk.
+        const fuse = new Fuse(knowledgeChunks, {
+            keys: ['content'], // Search the 'content' key
+            includeScore: true,
+            threshold: 0.4,
+        });
         
-        // --- STEP 2: GENERATION (Unchanged) ---
+        const searchResults = fuse.search(userQuestion);
+        const relevantContext = searchResults.slice(0, 5).map(result => result.item.content).join('\n\n');
+
+        // --- THE REST OF THE CODE IS UNCHANGED AND STABLE ---
         const systemPrompt = `You are a hyper-efficient AI concierge for 'Villa Oasis'. Your goal is to provide clear, concise answers based ONLY on the "RELEVANT CONTEXT" provided below.
         - First, analyze the user's conversation history for context.
         - Then, formulate your answer using the "RELEVANT CONTEXT".
@@ -70,9 +70,8 @@ export default async function handler(req, res) {
 
         return res.status(200).json({ answer: aiResponse });
 
-    } catch (error)
-    {
-        console.error("Error inside the Vercel RAG function:", error);
+    } catch (error) {
+        console.error("Error inside the Vercel function:", error);
         return res.status(500).json({ error: "Something went wrong with the AI. Please try again." });
     }
 }
