@@ -1,21 +1,22 @@
 const OpenAI = require('openai');
 const path = require('path');
 const fs = require('fs').promises;
-const Fuse = require('fuse.js');
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-// This function now creates an array of objects, which is better for searching.
-async function getSearchableKnowledge() {
-    const knowledgeBasePath = path.join(process.cwd(), 'knowledge.txt');
-    const knowledgeBase = await fs.readFile(knowledgeBasePath, 'utf-8');
-    const chunks = knowledgeBase.split(/\n\s*\n/)
-        .map(chunk => chunk.trim())
-        .filter(Boolean)
-        .map(chunk => ({ content: chunk })); // Create objects with a 'content' key
-    return chunks;
+// Helper function for the math (dot product similarity)
+function cosineSimilarity(vecA, vecB) {
+    let dotProduct = 0.0;
+    let normA = 0.0;
+    let normB = 0.0;
+    for (let i = 0; i < vecA.length; i++) {
+        dotProduct += vecA[i] * vecB[i];
+        normA += vecA[i] * vecA[i];
+        normB += vecB[i] * vecB[i];
+    }
+    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 }
 
 export default async function handler(req, res) {
@@ -31,26 +32,39 @@ export default async function handler(req, res) {
     const userQuestion = history[history.length - 1].content;
 
     try {
-        // --- STABLE AND RELIABLE RAG SEARCH ---
-        const knowledgeChunks = await getSearchableKnowledge();
+        // --- STEP 1: EMBEDDING-BASED RETRIEVAL ---
         
-        // This tells Fuse to search specifically within the 'content' of each chunk.
-        const fuse = new Fuse(knowledgeChunks, {
-            keys: ['content'], // Search the 'content' key
-            includeScore: true,
-            threshold: 0.4,
-        });
-        
-        const searchResults = fuse.search(userQuestion);
-        const relevantContext = searchResults.slice(0, 5).map(result => result.item.content).join('\n\n');
+        // 1. Load our pre-generated smart index
+        const embeddingsPath = path.join(process.cwd(), 'knowledge_embeddings.json');
+        const knowledgeEmbeddings = JSON.parse(await fs.readFile(embeddingsPath, 'utf-8'));
 
-        // --- THE REST OF THE CODE IS UNCHANGED AND STABLE ---
+        // 2. Convert the user's question into an embedding vector
+        const questionEmbeddingResponse = await openai.embeddings.create({
+            model: "text-embedding-3-small",
+            input: userQuestion,
+        });
+        const questionEmbedding = questionEmbeddingResponse.data[0].embedding;
+
+        // 3. Compare the question vector to all paragraph vectors
+        const scoredChunks = knowledgeEmbeddings.map(chunk => ({
+            content: chunk.content,
+            score: cosineSimilarity(questionEmbedding, chunk.embedding),
+        }));
+
+        // 4. Sort by similarity and get the most relevant content
+        scoredChunks.sort((a, b) => b.score - a.score);
+        const relevantContext = scoredChunks.slice(0, 4)
+            .filter(chunk => chunk.score > 0.4) // Filter out irrelevant results
+            .map(chunk => chunk.content)
+            .join('\n\n');
+
+        // --- STEP 2: GENERATION (Unchanged) ---
         const systemPrompt = `You are a hyper-efficient AI concierge for 'Villa Oasis'. Your goal is to provide clear, concise answers based ONLY on the "RELEVANT CONTEXT" provided below.
-        - First, analyze the user's conversation history for context.
-        - Then, formulate your answer using the "RELEVANT CONTEXT".
-        - If the provided context is insufficient to answer the question, you MUST politely decline by saying: "Sorry, I couldn't find specific information on that. You can try rephrasing, or contact staff for more help."
-        - For action/service requests (e.g., "book a massage"), redirect them to the staff's WhatsApp: +62 812 3456 7890.
-        - Be direct and avoid conversational fluff. Use bullet points for lists.
+        - Analyze the conversation history for context.
+        - Formulate your answer using the "RELEVANT CONTEXT".
+        - If the context is empty or insufficient, politely decline: "Sorry, I couldn't find specific information on that. You can try rephrasing, or contact staff for more help."
+        - For action requests, redirect to WhatsApp: +62 812 3456 7890.
+        - Be direct. Use bullet points for lists.
         --- RELEVANT CONTEXT ---
         ${relevantContext}
         --- END RELEVANT CONTEXT ---
@@ -58,16 +72,12 @@ export default async function handler(req, res) {
 
         const completion = await openai.chat.completions.create({
             model: "gpt-3.5-turbo",
-            messages: [
-                { role: "system", content: systemPrompt },
-                ...history
-            ],
+            messages: [{ role: "system", content: systemPrompt }, ...history],
             temperature: 0.2,
-            max_tokens: 200,
+            max_tokens: 250,
         });
 
         const aiResponse = completion.choices[0].message.content;
-
         return res.status(200).json({ answer: aiResponse });
 
     } catch (error) {

@@ -1,0 +1,37 @@
+// This is a one-time use script to generate our embeddings.
+require('dotenv').config();
+const OpenAI = require('openai');
+const path = require('path');
+const fs = require('fs').promises;
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+async function generateAndSaveEmbeddings() {
+    console.log("Starting embedding generation...");
+
+    // 1. Read and chunk the knowledge base
+    const knowledgeBasePath = path.join(__dirname, 'knowledge.txt');
+    const knowledgeBase = await fs.readFile(knowledgeBasePath, 'utf-8');
+    const chunks = knowledgeBase.split(/\n\s*\n/).map(chunk => chunk.trim()).filter(Boolean);
+    console.log(`Found ${chunks.length} chunks of text.`);
+
+    // 2. Call OpenAI's embedding model for all chunks
+    const response = await openai.embeddings.create({
+        model: "text-embedding-3-small", // This is a very cheap and efficient model
+        input: chunks,
+    });
+    console.log("Successfully received embeddings from OpenAI.");
+
+    // 3. Combine chunks with their corresponding embedding vectors
+    const embeddings = response.data.map((embeddingObj, i) => ({
+        content: chunks[i],
+        embedding: embeddingObj.embedding,
+    }));
+
+    // 4. Save the result to a JSON file
+    const outputPath = path.join(__dirname, 'knowledge_embeddings.json');
+    await fs.writeFile(outputPath, JSON.stringify(embeddings, null, 2));
+    console.log(`Embeddings saved successfully to ${outputPath}! You can now commit this file.`);
+}
+
+generateAndSaveEmbeddings().catch(console.error);
