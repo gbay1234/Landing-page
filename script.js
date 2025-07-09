@@ -72,20 +72,43 @@ document.addEventListener('DOMContentLoaded', () => {
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return thinkingElement;
         };
+        
+        // --- UPDATED AI CHAT LOGIC ---
         const handleUserInput = async (text) => {
             if (!text.trim()) return;
             chatHistory.push({ role: 'user', content: text });
             displayMessage(text, 'user');
             chatInput.value = '';
             const thinkingMessage = displayThinking();
+
+            // Simulated AI Response Logic
             setTimeout(() => {
                 thinkingMessage.remove();
-                const aiResponseMarkdown = "Thanks for testing the chat! This feature is coming soon. Claim an offer from the pricing section to be notified!";
+                let aiResponseMarkdown;
+                const lowerCaseText = text.toLowerCase();
+
+                if (lowerCaseText.includes('wifi') || lowerCaseText.includes('password')) {
+                    aiResponseMarkdown = "The WiFi network is **VillaOasis_5G** and the password is **Paradise2025**. Enjoy your streaming!";
+                } else if (lowerCaseText.includes('late checkout') || lowerCaseText.includes('check out') || lowerCaseText.includes('checkout')) {
+                    aiResponseMarkdown = "Standard checkout is at **11:00 AM**. A late checkout might be possible depending on availability. Please contact the villa manager to confirm. A small fee may apply.";
+                } else if (lowerCaseText.includes('restaurant') || lowerCaseText.includes('food') || lowerCaseText.includes('eat')) {
+                    aiResponseMarkdown = "You're in for a treat! For a stunning sunset dinner, I recommend **La Brisa** on Echo Beach. For authentic Indonesian cuisine, **Warung Ganesha** is a local favorite. Let me know if you'd like me to make a reservation!";
+                } else if (lowerCaseText.includes('pool') || lowerCaseText.includes('towel')) {
+                    aiResponseMarkdown = "You can find fresh, fluffy pool towels in the large white cabinet next to the living room's main sliding door. Help yourself!";
+                } else if (lowerCaseText.includes('breakfast')) {
+                    aiResponseMarkdown = "Breakfast is served from **8:00 AM to 10:30 AM**. You can explore the menu and place an order directly from the 'In-Villa Dining' section of this app.";
+                } else if (lowerCaseText.includes('hello') || lowerCaseText.includes('hi') || lowerCaseText.includes('hey')) {
+                     aiResponseMarkdown = "Hello there! How can I make your stay at Villa Oasis even better today?";
+                } else {
+                    aiResponseMarkdown = "That's a great question. For the most accurate information, I'd recommend checking the digital Guest Booklet or contacting the villa manager directly. Can I help with anything else, like the wifi password or local recommendations?";
+                }
+                
                 chatHistory.push({ role: 'assistant', content: aiResponseMarkdown });
                 const aiResponseHtml = converter.makeHtml(aiResponseMarkdown);
                 displayMessage(aiResponseHtml, 'bot');
-            }, 1500);
+            }, 1200); // A snappier response time
         };
+        
         chatForm.addEventListener('submit', (e) => { e.preventDefault(); handleUserInput(chatInput.value); });
         const suggestions = ["What's the wifi password?", "Can I get a late checkout?", "Recommend a good restaurant"];
         suggestions.forEach(suggestion => {

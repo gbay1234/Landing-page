@@ -46,7 +46,7 @@ body {
 .main-nav { display: none; gap: 32px; }
 .main-nav a { color: var(--color-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
 .main-nav a:hover { color: var(--color-primary); }
-.header-cta { display: none; }
+/* .header-cta { display: none; } <-- Removed to make CTA visible on mobile */
 .hero-marquee { padding-top: 120px; padding-bottom: 60px; position: relative; background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border); display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; overflow: hidden; }
 .hero-content { position: relative; z-index: 3; width: 100%; max-width: 700px; padding: 40px 0; }
 .hero-headline { font-family: var(--font-display); font-size: clamp(2.5rem, 7vw, 4rem); color: var(--color-secondary); margin-bottom: 1rem; }
