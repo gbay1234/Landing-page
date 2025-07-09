@@ -95,8 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const thinkingMessage = displayMessage('', 'bot', true);
 
             try {
-                // This now calls our LIVE Vercel server function
-const response = await fetch('/api/server.js', {
+                const response = await fetch('/api/server.js', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -108,11 +107,16 @@ const response = await fetch('/api/server.js', {
                     throw new Error('Network response was not ok');
                 }
 
+                // UPDATED LOGIC
                 const data = await response.json();
-                const aiResponse = data.answer;
+                const markdownResponse = data.answer;
+                
+                // Create a showdown converter and translate the markdown to HTML
+                const converter = new showdown.Converter();
+                const htmlResponse = converter.makeHtml(markdownResponse);
 
                 thinkingMessage.classList.remove('thinking');
-                thinkingMessage.innerHTML = aiResponse;
+                thinkingMessage.innerHTML = htmlResponse; // Display the clean HTML
 
             } catch (error) {
                 console.error('Error fetching AI response:', error);
