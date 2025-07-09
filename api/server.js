@@ -1,20 +1,21 @@
-const express = require('express');
+// This is the Vercel-native way to write a serverless function.
 const OpenAI = require('openai');
+const path = require('path');
 const fs = require('fs').promises;
-const dotenv = require('dotenv');
-const cors = require('cors');
 
-dotenv.config();
-
-const app = express();
+// Initialize OpenAI client using the Environment Variable from Vercel settings
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
-app.use(cors());
-app.use(express.json());
+// This is the main function Vercel will run
+export default async function handler(req, res) {
+    // Only allow POST requests
+    if (req.method !== 'POST') {
+        res.setHeader('Allow', 'POST');
+        return res.status(405).end('Method Not Allowed');
+    }
 
-app.post('/ask-ai', async (req, res) => {
     const userQuestion = req.body.question;
 
     if (!userQuestion) {
@@ -22,7 +23,11 @@ app.post('/ask-ai', async (req, res) => {
     }
 
     try {
-        const knowledgeBase = await fs.readFile('knowledge.txt', 'utf-8');
+        // This is the CRITICAL FIX:
+        // It correctly finds the knowledge.txt file in the project's root folder,
+        // no matter where Vercel is running this function from.
+        const knowledgeBasePath = path.join(process.cwd(), 'knowledge.txt');
+        const knowledgeBase = await fs.readFile(knowledgeBasePath, 'utf-8');
 
         const systemPrompt = `You are a helpful and friendly AI concierge for "Villa Oasis".
         Your role is to answer guest questions based *only* on the information provided in the "KNOWLEDGE BASE" below.
@@ -48,21 +53,12 @@ app.post('/ask-ai', async (req, res) => {
 
         const aiResponse = completion.choices[0].message.content;
 
-        res.json({ answer: aiResponse });
+        // Send the successful response back
+        return res.status(200).json({ answer: aiResponse });
 
     } catch (error) {
-        console.error("Error processing request:", error);
-        res.status(500).json({ error: "Something went wrong with the AI. Please try again." });
+        // If anything goes wrong, log it for debugging and send an error
+        console.error("Error inside the Vercel function:", error);
+        return res.status(500).json({ error: "Something went wrong with the AI. Please try again." });
     }
-});
-
-// This part is only for local testing, Vercel will handle it automatically.
-// If you want to test on your computer, run `node server.js` in your terminal.
-if (process.env.NODE_ENV !== 'production') {
-    const port = 3000;
-    app.listen(port, () => {
-        console.log(`Server is running for local testing at http://localhost:${port}`);
-    });
 }
-
-module.exports = app;
