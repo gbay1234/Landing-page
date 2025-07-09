@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         revealElements.forEach(el => { revealObserver.observe(el); });
     }
 
-    // --- UPSELL BUILDER LOGIC FOR PHONE MOCKUP ---
+    // --- UPSELL BUILDER LOGIC FOR PHONE MOCKUP (REVISED HTML STRUCTURE) ---
     const upsellBuilderItems = document.querySelectorAll('#upsell-builder .builder-item');
     const liveUpsellContainer = document.getElementById('live-upsell-items');
     if (upsellBuilderItems.length > 0 && liveUpsellContainer) {
@@ -43,8 +43,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const card = document.createElement('div');
                 card.classList.add('upsell-item-card');
 
-                // Correct HTML structure for the items WITHIN the phone mockup
-                card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4><p>${desc}</p><span class="item-price">${price}</span></div><button class="item-add-btn"><i data-feather="plus"></i></button>`;
+                // NEW HTML structure to group title/button on one row
+                card.innerHTML = `
+                    <img src="${img}" alt="${name}" class="item-image">
+                    <div class="item-details">
+                        <div class="item-header">
+                            <div class="item-title-wrapper">
+                                <div class="item-tags">${tagsHTML}</div>
+                                <h4>${name}</h4>
+                            </div>
+                            <button class="item-add-btn"><i data-feather="plus"></i></button>
+                        </div>
+                        <p>${desc}</p>
+                        <span class="item-price">${price}</span>
+                    </div>`;
                 
                 liveUpsellContainer.appendChild(card);
                 feather.replace();
