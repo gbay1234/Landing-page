@@ -1,3 +1,8 @@
 {
-  "trailingSlash": true
+  "rewrites": [
+    {
+      "source": "/builder",
+      "destination": "/builder/"
+    }
+  ]
 }
