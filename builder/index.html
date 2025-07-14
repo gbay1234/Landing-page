@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- START: HEAD - Metadata, Fonts, and Stylesheets -->
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>[Your Villa Name] - Concierge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Playfair+Display:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <!-- Add this line right before the closing </head> tag -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+    <!-- END: HEAD - Metadata, Fonts, and Stylesheets -->
+  </head>
+  <body>
+    <div id="app">
+      <main class="app-content">
+        <!-- 
+          =====================================================================
+          PAGE SCREENS - These are the main content areas that swap in and out.
+          =====================================================================
+        -->
+
+               <!-- START: SCREEN 1 - HOME -->
+        <!-- This is the main screen guests see when the app loads. -->
+        <div id="home-screen" class="screen active">
+          <header class="hero-header">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+              <h1 data-editor-target="villaName">Villa Oasis</h1>
+              <p data-editor-target="headerSubtitle">
+                Your private concierge, just a tap away.
+              </p>
+            </div>
+          </header>
+          <div class="home-body">
+            <div class="essentials-section">
+              <h2>Your Essentials</h2>
+              <div class="essentials-grid">
+                <!-- Essential cards are rendered here by JS -->
+              </div>
+            </div>
+
+            <div class="navigation-section">
+              <h2>Discover Your Stay</h2>
+              <!-- Navigation cards will be rendered here by JS -->
+            </div>
+          </div>
+        </div>
+        <!-- END: SCREEN 1 - HOME -->
+
+        <!-- START: SCREEN 2 - EXTRAS & SERVICES -->
+        <!-- This screen shows the menu of items and services guests can order. -->
+        <div id="extras-screen" class="screen">
+          <header class="hero-header short-header">
+            <div class="hero-overlay"></div>
+            <div class="hero-content"><h1>Extras & Services</h1></div>
+          </header>
+          <nav id="menu-tabs-container" class="tabs"></nav>
+          <section class="menu-section">
+            <div id="menu-items-container"></div>
+          </section>
+        </div>
+        <!-- END: SCREEN 2 - EXTRAS & SERVICES -->
+
+        <!-- START: SCREEN 3 - EXPLORE -->
+        <!-- This screen shows local recommendations and a map. -->
+        <div id="explore-screen" class="screen">
+          <header class="hero-header short-header">
+            <div class="hero-overlay"></div>
+            <div class="hero-content"><h1>Explore the Island</h1></div>
+          </header>
+
+          <!-- <div class="map-visual-container">
+            <img src="https://i.imgur.com/GXBf12a.jpeg" alt="Island Map" />
+            <div class="map-visual-prompt">
+              Tap a category below to see our picks
+            </div>
+          </div> -->
+
+          <div class="explore-filters-container">
+            <!-- Filters will be rendered here by JS -->
+          </div>
+
+          <div id="explore-list-container" class="explore-list">
+            <!-- Location cards will be rendered here by JS -->
+          </div>
+        </div>
+        <!-- END: SCREEN 3 - EXPLORE -->
+
+        <!-- START: SCREEN 4 - VILLA GUIDE -->
+        <!-- This screen contains the A-Z guide for the villa. -->
+        <div id="guide-screen" class="screen">
+          <header class="hero-header short-header">
+            <div class="hero-overlay"></div>
+            <div class="hero-content"><h1>Villa Guide</h1></div>
+          </header>
+          <div class="accordion-container">
+            <!-- Accordion items will be rendered here by JS -->
+          </div>
+        </div>
+        <!-- END: SCREEN 4 - VILLA GUIDE -->
+      </main>
+
+      <!-- 
+        =====================================================================
+        MODALS & FLOATING UI - These are all the pop-ups and floating elements.
+        =====================================================================
+      -->
+
+          <!-- START: FLOATING UI & MODALS -->
+      
+      <!-- UI: View Order Bar -->
+      <div id="view-order-bar" class="hidden">
+        <span id="order-count-badge">0</span>
+        <button id="view-order-button">View Your Order</button>
+      </div>
+
+      <!-- Modal: Email Gate -->
+      <div id="email-gate-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Welcome to the Studio!</h3>
+          <p>
+            Enter your work email below to unlock temporary editor access and
+            see how easy it is to customize your guest portal.
+          </p>
+          <form id="email-gate-form">
+            <input
+              type="email"
+              id="email-gate-input"
+              placeholder="you@yourvilla.com"
+              required
+            />
+            <button type="submit" class="cta-button">Unlock Editor</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal: Order Summary -->
+      <div id="order-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Your Order</h3>
+          <div id="order-items-list"></div>
+          <div class="order-summary">
+            <div class="summary-line">
+              <span>Subtotal</span><span id="order-subtotal">Rp 0</span>
+            </div>
+            <div class="summary-line">
+              <span>Service (10%)</span><span id="order-service">Rp 0</span>
+            </div>
+            <div class="summary-line total">
+              <span>Total</span><span id="order-total">Rp 0</span>
+            </div>
+          </div>
+          <button class="cta-button">Confirm & Place Order</button>
+        </div>
+      </div>
+
+      <!-- Modal: WiFi Details -->
+      <div id="wifi-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Villa WiFi</h3>
+          <div class="wifi-info-box">
+            <span>Network:</span>
+            <strong id="wifi-name"></strong>
+          </div>
+          <div class="wifi-info-box">
+            <span>Password:</span>
+            <strong id="wifi-pass"></strong>
+          </div>
+          <button id="copy-pass-btn" class="cta-button">Copy Password</button>
+        </div>
+      </div>
+      
+      <!-- Modal: Contact Host -->
+      <div id="contact-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Contact Your Host</h3>
+          <div id="contact-info-container">
+            <!-- Contact buttons are rendered here by JS -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal: Key / Access Info -->
+      <div id="key-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Key & Access Info</h3>
+          <div class="wifi-info-box">
+              <span>Access Instructions</span>
+              <p id="key-instructions" style="white-space: pre-wrap; font-size: 1rem; background: #f0f0f0; padding: 10px; border-radius: 6px; margin-top: 4px;"></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal: Housekeeping Info -->
+      <div id="housekeeping-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Housekeeping</h3>
+          <div class="wifi-info-box">
+              <span>Service Details</span>
+              <p id="housekeeping-info" style="white-space: pre-wrap; font-size: 1rem; background: #f0f0f0; padding: 10px; border-radius: 6px; margin-top: 4px;"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Directions -->
+      <div id="directions-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>How to Get Here</h3>
+          <div class="directions-map-preview">
+            <img src="https://i.imgur.com/GXBf12a.jpeg" alt="Directions Map Preview" data-editor-target="directionsImage">
+            <a href="https://maps.google.com" target="_blank" class="cta-button map-link-btn" data-editor-target="directionsGmapsLink">
+              <i class="fa-solid fa-diamond-turn-right"></i> Open in Google Maps
+            </a>
+          </div>
+          <div class="directions-content">
+            <h4 data-editor-target="directionsTitle1"></h4>
+            <p data-editor-target="directionsContent1"></p>
+            <h4 data-editor-target="directionsTitle2"></h4>
+            <p data-editor-target="directionsContent2"></p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal: Custom Essential Detail -->
+      <div id="custom-essential-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <img src="" alt="" id="custom-essential-image" class="detail-modal-image">
+          <div class="detail-modal-content">
+            <h3 id="custom-essential-title"></h3>
+            <div id="custom-essential-description"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Item Detail -->
+      <div id="item-detail-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <img src="" alt="" id="detail-item-image" class="detail-modal-image">
+          <div class="detail-modal-content">
+            <div id="detail-item-tags" class="detail-tags-container"></div>
+            <h3 id="detail-item-name"></h3>
+            <p id="detail-item-description"></p>
+            <div id="detail-item-extra-info-container" class="hidden">
+                <h4>Good to know:</h4>
+                <div id="detail-item-extra-info"></div>
+            </div>
+            <div class="detail-modal-footer">
+              <span id="detail-item-price" class="detail-price"></span>
+              <button id="detail-add-to-order-btn" class="cta-button short-cta">Add to Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: AI Chat -->
+      <div id="chat-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+          <button class="modal-close-btn">×</button>
+          <h3>Ask a Question</h3>
+          <div id="chat-message-list">
+            <div class="chat-bubble model" id="chat-welcome-message">
+              Hello! I'm the villa AI, your digital concierge. How can I assist you
+              with your stay?
+            </div>
+          </div>
+          <div id="chat-loading" class="hidden">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <form id="chat-form">
+            <input
+              type="text"
+              id="chat-input"
+              placeholder="What is the WiFi password?"
+            />
+            <button type="submit" id="chat-send-btn">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      <!-- END: FLOATING UI & MODALS -->
+      
+
+      <!-- START: LIVE EDITOR PANEL -->
+      <!-- This is the entire slide-out panel for editing content live. -->
+      <button id="edit-toggle-btn">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </button>
+
+      <div id="live-editor-panel">
+        <div class="editor-header">
+          <h3>Live Editor</h3>
+          <button id="close-editor-btn"><i class="fa-solid fa-check"></i></button>
+        </div>
+        <nav id="editor-tabs">
+          <button class="editor-tab-btn active" data-tab="style">
+            <i class="fa-solid fa-palette"></i> Style
+          </button>
+          <button class="editor-tab-btn" data-tab="home">
+            <i class="fa-solid fa-home"></i> Home
+          </button>
+          <button class="editor-tab-btn" data-tab="extras">
+            <i class="fa-solid fa-utensils"></i> Extras
+          </button>
+           <button class="editor-tab-btn" data-tab="explore">
+            <i class="fa-solid fa-map-location-dot"></i> Explore
+          </button>
+          <button class="editor-tab-btn" data-tab="guide">
+            <i class="fa-solid fa-book"></i> Guide
+          </button>
+        </nav>
+        <div id="editor-tab-content">
+          <!-- Editor Content: Style -->
+          <div class="editor-tab-pane active" id="style-tab-content">
+            <div class="form-group">
+              <label for="villa-name-input">Villa Name</label>
+              <input type="text" id="villa-name-input" />
+            </div>
+            <div class="form-group">
+              <label for="header-image-upload">Header Image</label>
+              <input type="file" id="header-image-upload" class="file-input" accept="image/*" />
+              <label for="header-image-upload" class="file-input-label">Choose a file...</label>
+            </div>
+            <div class="form-group">
+              <label for="brand-color-input">Brand Color</label>
+              <input type="color" id="brand-color-input" />
+            </div>
+          </div>
+          <!-- Editor Content: Home -->
+          <div class="editor-tab-pane" id="home-tab-content">
+            <div class="form-group">
+              <label>Header Subtitle</label>
+              <input type="text" id="home-subtitle-input" />
+            </div>
+            <hr />
+            <h4>Home Screen Essentials</h4>
+            <p class="editor-instructions">Select 4 to 6 essentials to show on the home screen. Click any item to edit its details.</p>
+            <div id="editor-essentials-list">
+              <!-- Editor controls for essentials are rendered here by JS -->
+            </div>
+            <button class="editor-add-btn" id="add-custom-essential-btn">+ Add Custom Essential</button>
+          </div>
+          <!-- Editor Content: Extras -->
+          <div class="editor-tab-pane" id="extras-tab-content">
+            <h4>Categories</h4>
+            <div id="editor-categories-list"></div>
+            <button class="editor-add-btn" id="add-category-btn">+ Add Category</button>
+            <hr />
+            <h4>Items & Services</h4>
+            <div id="editor-items-list"></div>
+            <button class="editor-add-btn" id="add-menu-item-btn">+ Add Item / Service</button>
+          </div>
+          <!-- Editor Content: Explore -->
+          <div class="editor-tab-pane" id="explore-tab-content">
+            <h4>Explore Locations</h4>
+            <div id="editor-explore-locations-list"></div>
+            <button class="editor-add-btn" id="add-explore-location-btn">+ Add Location</button>
+          </div>
+          <!-- Editor Content: Guide -->
+          <div class="editor-tab-pane" id="guide-tab-content">
+            <h4>Accordion Sections</h4>
+            <div id="editor-guide-list"></div>
+            <button class="editor-add-btn" id="add-guide-btn">+ Add Guide Section</button>
+          </div>
+        </div>
+      </div>
+      <!-- END: LIVE EDITOR PANEL -->
+
+      <!-- START: OTHER UI ELEMENTS -->
+      <!-- Miscellaneous UI like toasts and global buttons. -->
+      <div id="success-toast"></div>
+      <button id="publish-now-btn">
+          <i class="fa-solid fa-rocket"></i>
+          <span>Publish Now</span>
+      </button>
+      <!-- END: OTHER UI ELEMENTS -->
+
+
+      <!-- START: BOTTOM NAVIGATION BAR -->
+      <!-- The main navigation bar fixed to the bottom of the screen. -->
+      <nav id="bottom-nav">
+        <button class="nav-btn active" data-target="home-screen">
+          <i class="fas fa-home"></i><span>Home</span>
+        </button>
+        <button class="nav-btn" data-target="extras-screen">
+          <i class="fas fa-bell-concierge"></i><span>Extras</span>
+        </button>
+        <button class="nav-btn" data-target="explore-screen">
+          <i class="fas fa-map"></i><span>Explore</span>
+        </button>
+        <button class="nav-btn" data-target="guide-screen">
+          <i class="fas fa-book"></i><span>Guide</span>
+        </button>
+        <button class="nav-btn" data-target="chat-modal">
+          <i class="fas fa-robot"></i><span>Ask AI</span>
+        </button>
+      </nav>
+      <!-- END: BOTTOM NAVIGATION BAR -->
+    </div>
+
+    <!-- 
+      =====================================================================
+      JAVASCRIPT TEMPLATES - These are invisible HTML structures that JS
+      copies to create new elements, like menu items or guide sections.
+      =====================================================================
+    -->
+    
+    <!-- START: JAVASCRIPT TEMPLATES -->
+
+    <!-- Template: Editor Menu Item -->
+    <template id="editor-menu-item-template">
+      <div class="editor-accordion-card">
+        <div class="editor-accordion-header">
+          <div class="editor-reorder-controls">
+            <button class="reorder-btn" data-direction="up" title="Move Up"><i class="fa-solid fa-angle-up"></i></button>
+            <button class="reorder-btn" data-direction="down" title="Move Down"><i class="fa-solid fa-angle-down"></i></button>
+          </div>
+          <span class="editor-accordion-title">Menu Item</span><i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="editor-accordion-content">
+          <div class="form-group"><label>Item Name</label><input type="text" class="menu-item-name" /></div>
+          <div class="form-group"><label>Description</label><input type="text" class="menu-item-desc" /></div>
+          <div class="form-group"><label>Price (IDR)</label><input type="number" class="menu-item-price" /></div>
+          <div class="form-group">
+            <label>Image</label>
+            <input type="file" class="file-input menu-item-img-upload" accept="image/*" id="img-upload-{{id}}" />
+            <label class="file-input-label" for="img-upload-{{id}}">Choose a file...</label>
+          </div>
+          <div class="form-group">
+            <label>Tags (e.g. Top Seller, 🌶️ Spicy, Vegan)</label>
+            <input type="text" class="menu-item-tags" placeholder="Comma-separated, e.g. tag1, tag2" />
+          </div>
+          <div class="form-group">
+            <label>Good to Know (supports Markdown)</label>
+            <textarea class="menu-item-extra" rows="2" placeholder="e.g. Allergens, booking time..."></textarea>
+          </div>
+          <div class="form-group"><label>Category</label><select class="menu-item-category-select"></select></div>
+          <button class="editor-remove-btn"><i class="fa-solid fa-trash"></i> Remove Item</button>
+        </div>
+      </div>
+    </template>
+    
+    <!-- Template: Editor Explore Location -->
+    <template id="editor-explore-location-template">
+      <div class="editor-accordion-card">
+        <div class="editor-accordion-header">
+           <div class="editor-reorder-controls">
+            <button class="reorder-btn" data-direction="up" title="Move Up"><i class="fa-solid fa-angle-up"></i></button>
+            <button class="reorder-btn" data-direction="down" title="Move Down"><i class="fa-solid fa-angle-down"></i></button>
+          </div>
+          <span class="editor-accordion-title">Location</span><i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="editor-accordion-content">
+          <div class="form-group"><label>Location Name</label><input type="text" class="location-item-name" /></div>
+          <div class="form-group"><label>Category (e.g. Beach, Restaurant)</label><input type="text" class="location-item-category" /></div>
+          <div class="form-group"><label>Distance from Villa (e.g. 5 min walk)</label><input type="text" class="location-item-distance" /></div>
+          <div class="form-group"><label>Description</label><input type="text" class="location-item-desc" /></div>
+          <div class="form-group"><label>Google Maps URL</label><input type="text" class="location-item-gmaps" /></div>
+          <div class="form-group">
+            <label>Image</label>
+            <input type="file" class="file-input location-item-img-upload" accept="image/*" id="loc-img-upload-{{id}}" />
+            <label class="file-input-label" for="loc-img-upload-{{id}}">Choose a file...</label>
+          </div>
+          <button class="editor-remove-btn"><i class="fa-solid fa-trash"></i> Remove Location</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- Template: Editor Guide Item -->
+    <template id="editor-guide-item-template">
+      <div class="editor-accordion-card">
+        <button class="editor-accordion-header">
+          <span class="editor-accordion-title">Guide Section</span><i class="fa-solid fa-chevron-down"></i>
+        </button>
+        <div class="editor-accordion-content">
+          <div class="form-group"><label>Section Title</label><input type="text" class="guide-item-title" /></div>
+          <div class="form-group">
+            <label>Content (Supports Markdown: *bold*, - lists, etc.)</label>
+            <textarea class="guide-item-content" rows="5" placeholder="Just start typing! Press Enter for new lines."></textarea>
+          </div>
+          <button class="editor-remove-btn"><i class="fa-solid fa-trash"></i> Remove Section</button>
+        </div>
+      </div>
+    </template>
+    
+    <!-- Template: Editor Custom Essential -->
+    <template id="editor-custom-essential-template">
+        <div class="editor-accordion-card" data-type="custom">
+            <div class="editor-accordion-header">
+                <span class="editor-accordion-title">Custom Essential</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="editor-accordion-content">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="essential-item-title" />
+                </div>
+                <div class="form-group">
+                    <label>Icon</label>
+                    <select class="essential-item-icon-select"></select>
+                </div>
+                <div class="form-group">
+                    <label>Description (supports Markdown)</label>
+                    <textarea class="essential-item-desc" rows="3" placeholder="Add content here. Press Enter for new lines."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Image (Optional)</label>
+                    <input type="file" class="file-input essential-item-img-upload" accept="image/*" id="essential-img-upload-{{id}}" />
+                    <label class="file-input-label" for="essential-img-upload-{{id}}">Choose a file...</label>
+                </div>
+                <button class="editor-remove-btn"><i class="fa-solid fa-trash"></i> Remove Essential</button>
+            </div>
+        </div>
+    </template>
+    <!-- END: JAVASCRIPT TEMPLATES -->
+
+    <!-- START: SCRIPT LOADER -->
+    <!-- This loads the main javascript file that makes the app interactive. -->
+    <script src="script.js"></script>
+    <!-- END: SCRIPT LOADER -->
+  </body>
+</html>
