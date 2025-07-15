@@ -630,12 +630,12 @@ document.addEventListener("DOMContentLoaded", () => {
       this.state.proTipsShown[type] = true;
     },
 
-        handlePublish() {
+    /*    handlePublish() {
       this.Editor.close();
       // Redirect the user to the specified URL
       window.location.href = 'https://staxy.com/builder';
       console.log("--- PUBLISH ACTION TRIGGERED, REDIRECTING ---");
-    },
+    },*/
     // --- END: App Logic and Handlers ---
     
     // --- START: Event Listeners (Making things clickable) ---
@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // --- SPECIFIC ELEMENT LISTENERS ---
       
       // --- Publish Button ---
-      this.dom.publishNowBtn.addEventListener("click", () => this.handlePublish());
+      // this.dom.publishNowBtn.addEventListener("click", () => this.handlePublish());
 
       // --- WiFi Modal Copy Button ---
       this.dom.copyPassBtn.addEventListener('click', () => {
