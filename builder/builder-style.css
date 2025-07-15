@@ -798,6 +798,59 @@ body {
 .detail-modal-content {
     padding: 20px;
 }
+
+/* --- START: FLOATING PUBLISH BUTTON STYLES --- */
+#publish-now-btn {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background-color: var(--brand-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-family: "Manrope", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1003;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+}
+
+#publish-now-btn button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    cursor: pointer;
+}
+
+#publish-now-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+#app.editor-was-opened #publish-now-btn {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+#live-editor-panel.visible ~ #success-toast,
+#app.editor-was-opened #success-toast {
+    z-index: 1004;
+}
+/* --- END: FLOATING PUBLISH BUTTON STYLES --- */
 .detail-modal-content h3 {
     text-align: left;
     font-size: 1.8rem;
@@ -1486,44 +1539,3 @@ input[type="checkbox"].editor-toggle:checked::before {
   text-align: center;
 }
 /* --- END: EMAIL GATE MODAL STYLES --- */
-
-
-/* --- START: FLOATING PUBLISH BUTTON STYLES --- */
-#publish-now-btn {
-    position: fixed;
-    top: 15px;
-    right: 20px;
-    background-color: var(--brand-color);
-    color: white;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-family: "Manrope", sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    z-index: 1003;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    opacity: 0;
-    transform: translateY(-20px);
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-#publish-now-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-}
-#app.editor-was-opened #publish-now-btn {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-#live-editor-panel.visible ~ #success-toast,
-#app.editor-was-opened #success-toast {
-    z-index: 1004;
-}
-/* --- END: FLOATING PUBLISH BUTTON STYLES --- */
