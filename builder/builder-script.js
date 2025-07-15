@@ -976,22 +976,48 @@ document.addEventListener("DOMContentLoaded", () => {
         this.dom.addCategoryBtn.disabled = count >= 3;
         this.dom.categoriesList.querySelectorAll(".editor-remove-btn").forEach((btn) => (btn.disabled = count <= 1));
       },
-      addMenuItemCard(item) {
+            addMenuItemCard(item) {
         const template = document.getElementById("editor-menu-item-template");
         const cardHtml = template.innerHTML.replace(/\{\{id\}\}/g, item.id);
         const cardWrapper = document.createElement("div");
         cardWrapper.innerHTML = cardHtml;
         const card = cardWrapper.firstElementChild;
         card.dataset.id = item.id;
+        
         card.querySelector(".editor-accordion-title").textContent = item.name;
         card.querySelector(".menu-item-name").value = item.name;
-        card.querySelector(".menu-item-desc").value = item.description;
         card.querySelector(".menu-item-price").value = item.price;
         card.querySelector(".menu-item-tags").value = item.tags.join(', ');
         card.querySelector(".menu-item-extra").value = item.extraInfo;
+
         const select = card.querySelector(".menu-item-category-select");
         this.updateAllCategorySelectors(select, item.categoryId);
         this.dom.itemsList.appendChild(card);
+        
+        // --- START: NEW WYSIWYG Editor Logic ---
+        const editorContainer = card.querySelector('.quill-editor-container');
+        const quill = new Quill(editorContainer, {
+            modules: {
+                toolbar: [
+                    ['bold', 'italic'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+                ]
+            },
+            placeholder: 'e.g. Our classic fried rice with a twist...',
+            theme: 'snow'
+        });
+
+        // Load existing description into the editor
+        // Note: Quill works with HTML, so even plain text will be wrapped in <p> tags.
+        quill.pasteHTML(item.description);
+
+        // Save changes from the editor back to our data object
+        quill.on('text-change', () => {
+            item.description = quill.root.innerHTML;
+            // Update the public-facing menu to reflect changes
+            this.App.renderMenuItems(); 
+        });
+        // --- END: NEW WYSIWYG Editor Logic ---
       },
       updateAllCategorySelectors(singleSelect = null, selectedId = null) {
         const categoryOptions = this.App.data.menuCategories.map((cat) => `<option value="${cat.id}">${cat.name}</option>`).join("");
@@ -1232,22 +1258,14 @@ document.addEventListener("DOMContentLoaded", () => {
              this.updateAllCategorySelectors(); this.App.renderMenu();
            }
          });
-         this.dom.itemsList.addEventListener("click", (e) => {
-           const card = e.target.closest(".editor-accordion-card");
-           if (!card) return;
-           if (e.target.closest(".editor-remove-btn")) {
-             this.App.data.menuItems = this.App.data.menuItems.filter((i) => i.id !== card.dataset.id);
-             card.remove(); this.App.renderMenu();
-           }
-           const reorderBtn = e.target.closest(".reorder-btn");
-           if (reorderBtn) {
-               const direction = reorderBtn.dataset.direction;
-               const items = this.App.data.menuItems;
-               const index = items.findIndex(item => item.id === card.dataset.id);
-               if (direction === 'up' && index > 0) [items[index], items[index - 1]] = [items[index - 1], items[index]];
-               else if (direction === 'down' && index < items.length - 1) [items[index], items[index + 1]] = [items[index + 1], items[index]];
-               this.populateMenuTab(); this.App.renderMenu();
-           }
+                  this.dom.itemsList.addEventListener("input", (e) => {
+           const card = e.target.closest(".editor-accordion-card"); if (!card) return;
+           const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id); if (!item) return;
+           const propMap = { "menu-item-name": "name", "menu-item-price": "price", "menu-item-category-select": "categoryId", "menu-item-extra": "extraInfo" };
+           for (const [cls, prop] of Object.entries(propMap)) if (e.target.classList.contains(cls)) item[prop] = prop === "price" ? Number(e.target.value) : e.target.value;
+           if (e.target.classList.contains("menu-item-tags")) item.tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
+           card.querySelector(".editor-accordion-title").textContent = item.name;
+           this.App.renderMenu();
          });
          this.dom.itemsList.addEventListener("input", (e) => {
            const card = e.target.closest(".editor-accordion-card"); if (!card) return;

@@ -1491,3 +1491,29 @@ input[type="checkbox"].editor-toggle:checked::before {
     z-index: 1004;
 }
 /* --- END: FLOATING PUBLISH BUTTON STYLES --- */
+
+/* --- START: WYSIWYG EDITOR STYLES --- */
+.quill-editor-container .ql-toolbar.ql-snow {
+  border: 1px solid #ccc;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom: none;
+  font-family: "Manrope", sans-serif;
+  padding: 12px 8px;
+}
+.quill-editor-container .ql-container.ql-snow {
+  border: 1px solid #ccc;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  min-height: 120px;
+  line-height: 1.6;
+  color: var(--text-color);
+}
+.quill-editor-container .ql-editor.ql-blank::before {
+  color: #aaa;
+  font-style: normal;
+  font-family: "Manrope", sans-serif;
+}
+/* --- END: WYSIWYG EDITOR STYLES --- */
