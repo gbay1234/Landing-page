@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           categoryId: "cat1",
           name: "Nasi Goreng Special",
-          description: "<p>Classic Indonesian fried rice with chicken satay &amp; fried egg.</p>",
+          description: "<p>Classic Indonesian fried rice with chicken satay & fried egg.</p>",
           price: 85000,
           image: "https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           tags: ['Top Seller', 'Spicy 🌶️'],
@@ -818,7 +818,6 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.type = 'pre-made';
 
         let formContent = '';
-        // Use <textarea> for longer-form content for better UX
         switch(essential.id) {
             case 'wifi':
                 formContent = `
@@ -958,7 +957,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const editorContainer = card.querySelector('.quill-editor-container');
           this.createRichTextEditor(editorContainer, essential.data.description, (newContent) => {
               essential.data.description = newContent;
-              this.App.renderEssentials(); // Re-render if you want live preview of modal content
           });
 
           const titleLabel = card.querySelector('.editor-accordion-title');
@@ -975,6 +973,8 @@ document.addEventListener("DOMContentLoaded", () => {
           
           card.querySelector('.essential-item-title').addEventListener('input', (e) => {
               titleLabel.textContent = e.target.value;
+              essential.title = e.target.value;
+              this.App.renderEssentials();
           });
 
           this.dom.editorEssentialsList.appendChild(card);
@@ -1206,6 +1206,7 @@ document.addEventListener("DOMContentLoaded", () => {
           this.App.renderExplorePage();
         });
         
+        // RESTORED: This listener handles the simple input fields in the Explore editor cards.
         this.dom.exploreLocationsList.addEventListener('input', e => {
             const card = e.target.closest('.editor-accordion-card');
             if(!card) return;
@@ -1324,6 +1325,7 @@ document.addEventListener("DOMContentLoaded", () => {
               card.remove(); this.App.renderGuide();
             }
           });
+          // RESTORED: This listener handles the 'title' input field in the Guide editor cards.
           this.dom.guideList.addEventListener("input", (e) => {
             const card = e.target.closest(".editor-accordion-card");
             const section = this.App.data.guideSections.find((s) => s.id === card.dataset.id);
