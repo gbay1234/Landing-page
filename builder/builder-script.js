@@ -630,10 +630,11 @@ document.addEventListener("DOMContentLoaded", () => {
       this.state.proTipsShown[type] = true;
     },
 
-    handlePublish() {
+        handlePublish() {
       this.Editor.close();
-      alert("Success! You are now being taken to the publishing page...\n(This is where the Fake Pricing Page will go)");
-      console.log("--- PUBLISH ACTION TRIGGERED ---");
+      // Redirect the user to the specified URL
+      window.location.href = 'https://staxy.com/builder';
+      console.log("--- PUBLISH ACTION TRIGGERED, REDIRECTING ---");
     },
     // --- END: App Logic and Handlers ---
     
