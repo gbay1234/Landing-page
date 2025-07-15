@@ -55,19 +55,19 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           title: "Arrival & Check-in",
           content:
-            "**Check-In Time:** After 2:00 PM\n**Check-Out Time:** Before 11:00 AM\n\n**Directions:** Please see the 'How to Get Here' card on the Home screen for detailed directions and map access.",
+            "<p><b>Check-In Time:</b> After 2:00 PM</p><p><b>Check-Out Time:</b> Before 11:00 AM</p><p><br></p><p><b>Directions:</b> Please see the 'How to Get Here' card on the Home screen for detailed directions and map access.</p>",
         },
         {
           id: newId(),
           title: "How-To Guides",
           content:
-            "**Jacuzzi:** Press the 'Jets' button. It takes 15 mins to heat.\n\n**Air Conditioning:** Use the remote control. We recommend 24°C for comfort and energy saving.",
+            "<p><b>Jacuzzi:</b> Press the 'Jets' button. It takes 15 mins to heat.</p><p><b>Air Conditioning:</b> Use the remote control. We recommend 24°C for comfort and energy saving.</p>",
         },
         {
           id: newId(),
           title: "House Rules & Policies",
           content:
-            "- Please, no smoking inside the villa.\n- No unregistered guests are permitted overnight.\n- Keep noise to a minimum after 10 PM.\n\nEnjoy your stay!",
+            "<ul><li>Please, no smoking inside the villa.</li><li>No unregistered guests are permitted overnight.</li><li>Keep noise to a minimum after 10 PM.</li></ul><p><br></p><p>Enjoy your stay!</p>",
         },
       ],
       menuCategories: [
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           category: "Restaurant",
           name: "Seaside Grill",
-          description: "The absolute best spot for fresh seafood with your feet in the sand. A guest favorite!",
+          description: "<p>The absolute best spot for fresh seafood with your feet in the sand. A guest favorite!</p>",
           image: "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           gmapsUrl: "https://maps.app.goo.gl/m3fQPf2U4b9BvxmN9",
           distance: "5 min drive",
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           category: "Beach",
           name: "Hidden Gem Beach",
-          description: "A quiet, pristine beach perfect for relaxing away from the crowds. A short scooter ride away.",
+          description: "<p>A quiet, pristine beach perfect for relaxing away from the crowds. A short scooter ride away.</p>",
           image: "https://images.pexels.com/photos/1430677/pexels-photo-1430677.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           gmapsUrl: "https://maps.app.goo.gl/m3fQPf2U4b9BvxmN9",
           distance: "10 min scooter",
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           category: "Sight",
           name: "Sunrise Temple",
-          description: "A beautiful historic temple with breathtaking views, especially at sunrise. Respectful attire required.",
+          description: "<p>A beautiful historic temple with breathtaking views, especially at sunrise. Respectful attire required.</p>",
           image: "https://images.pexels.com/photos/2618991/pexels-photo-2618991.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           gmapsUrl: "https://maps.app.goo.gl/m3fQPf2U4b9BvxmN9",
           distance: "20 min drive",
@@ -195,7 +195,6 @@ document.addEventListener("DOMContentLoaded", () => {
         directionsGmapsLink: document.querySelector('[data-editor-target="directionsGmapsLink"]'),
         directionsTitle1: document.querySelector('[data-editor-target="directionsTitle1"]'),
         directionsContent1: document.querySelector('[data-editor-target="directionsContent1"]'),
-        directionsTitle2: document.querySelector('[data-editor-target="directionsTitle2"]'),
         directionsContent2: document.querySelector('[data-editor-target="directionsContent2"]'),
         itemDetailModal: document.getElementById("item-detail-modal"),
         detailItemImage: document.getElementById("detail-item-image"),
@@ -305,10 +304,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGuide() {
       this.dom.accordionContainer.innerHTML = "";
       this.data.guideSections.forEach((section) => {
-        const formattedContent = this.converter.makeHtml(section.content);
         const item = document.createElement("div");
         item.className = "accordion-item";
-        item.innerHTML = `<button class="accordion-header"><span><i class="fa-solid fa-book-open"></i> ${section.title}</span><i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content">${formattedContent}</div>`;
+        item.innerHTML = `<button class="accordion-header"><span><i class="fa-solid fa-book-open"></i> ${section.title}</span><i class="fa-solid fa-chevron-down"></i></button><div class="accordion-content">${section.content}</div>`;
         item.querySelector(".accordion-header").addEventListener("click", () => item.classList.toggle("active"));
         this.dom.accordionContainer.appendChild(item);
       });
@@ -337,7 +335,6 @@ document.addEventListener("DOMContentLoaded", () => {
           itemEl.dataset.id = item.id;
           const tagsHtml = item.tags.map((tag, index) => `<span class="item-tag tag-style-${(index % 4) + 1}">${tag}</span>`).join('');
           
-          // Using a div for the description allows it to contain the <p> tags from the editor
           itemEl.innerHTML = `
             <img class="item-image" src="${item.image}" alt="${item.name}">
             <div class="item-details">
@@ -392,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
                           <span class="location-tag distance-tag"><i class="fa-solid fa-route"></i> ${loc.distance}</span>
                       </div>
                       <h3>${loc.name}</h3>
-                      <p>${loc.description}</p>
+                      <div class="location-description">${loc.description}</div>
                       <div class="location-card-actions">
                           <a href="${loc.gmapsUrl}" target="_blank" class="location-action-btn">
                               <i class="fa-solid fa-diamond-turn-right"></i> Directions
@@ -411,11 +408,10 @@ document.addEventListener("DOMContentLoaded", () => {
         this.dom.detailItemImage.src = item.image;
         this.dom.detailItemImage.alt = item.name;
         this.dom.detailItemName.textContent = item.name;
-        // Use .innerHTML to correctly render formatted text from the editor
         this.dom.detailItemDescription.innerHTML = item.description; 
         this.dom.detailItemPrice.textContent = `IDR ${item.price.toLocaleString("id-ID")}`;
         this.dom.detailItemTags.innerHTML = item.tags.map((tag, index) => `<span class="item-tag tag-style-${(index % 4) + 1}">${tag}</span>`).join('');
-        if (item.extraInfo) {
+        if (item.extraInfo && item.extraInfo.trim() !== '') {
             this.dom.detailItemExtraInfo.innerHTML = this.converter.makeHtml(item.extraInfo);
             this.dom.detailItemExtraInfoContainer.classList.remove('hidden');
         } else {
@@ -476,7 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         imgEl.style.display = 'none';
                     }
                     titleEl.textContent = essential.title;
-                    descEl.innerHTML = this.converter.makeHtml(essential.data.description);
+                    descEl.innerHTML = essential.data.description;
                 }
                 break;
         }
@@ -753,7 +749,6 @@ document.addEventListener("DOMContentLoaded", () => {
         this.App = appInstance;
         this.cacheEditorDOMElements();
         this.registerEditorEventListeners();
-        // --- NEW: Curated list of icons for the picker ---
         this.icons = {
             'fa-solid fa-star': 'Star', 'fa-solid fa-utensils': 'Restaurant', 'fa-solid fa-cocktail': 'Bar', 'fa-solid fa-store': 'Shopping',
             'fa-solid fa-spa': 'Spa', 'fa-solid fa-person-swimming': 'Pool / Beach', 'fa-solid fa-car': 'Transport', 'fa-solid fa-info-circle': 'Information',
@@ -823,6 +818,7 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.type = 'pre-made';
 
         let formContent = '';
+        // Use <textarea> for longer-form content for better UX
         switch(essential.id) {
             case 'wifi':
                 formContent = `
@@ -856,16 +852,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <div class="form-group"><label>Google Maps Link</label><input type="text" data-key="gmapsLink" value="${d.gmapsLink}"></div>
                     <div class="form-group"><label>Title 1</label><input type="text" data-key="title1" value="${d.title1}"></div>
-                    <div class="form-group"><label>Content 1</label><textarea rows="3" data-key="content1">${d.content1}</textarea></div>
+                    <div class="form-group"><label>Content 1</label><textarea rows="4" data-key="content1">${d.content1}</textarea></div>
                     <div class="form-group"><label>Title 2</label><input type="text" data-key="title2" value="${d.title2}"></div>
-                    <div class="form-group"><label>Content 2</label><textarea rows="3" data-key="content2">${d.content2}</textarea></div>
+                    <div class="form-group"><label>Content 2</label><textarea rows="4" data-key="content2">${d.content2}</textarea></div>
                 `;
                 break;
             case 'keys':
-                formContent = `<div class="form-group"><label>Instructions</label><textarea rows="3" data-key="instructions">${essential.data.instructions}</textarea></div>`;
+                formContent = `<div class="form-group"><label>Instructions</label><textarea rows="4" data-key="instructions">${essential.data.instructions}</textarea></div>`;
                 break;
             case 'housekeeping':
-                formContent = `<div class="form-group"><label>Service Details</label><textarea rows="3" data-key="info">${essential.data.info}</textarea></div>`;
+                formContent = `<div class="form-group"><label>Service Details</label><textarea rows="4" data-key="info">${essential.data.info}</textarea></div>`;
                 break;
         }
 
@@ -930,6 +926,24 @@ document.addEventListener("DOMContentLoaded", () => {
         container.append(displayBtn, panel);
         return container;
       },
+      
+      createRichTextEditor(container, initialContent, onUpdateCallback) {
+        const quill = new Quill(container, {
+            modules: {
+                toolbar: [
+                    ['bold', 'italic'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+                ]
+            },
+            placeholder: 'Type your description here...',
+            theme: 'snow'
+        });
+
+        quill.pasteHTML(initialContent || '');
+        quill.on('text-change', () => {
+            onUpdateCallback(quill.root.innerHTML);
+        });
+      },
 
       addCustomEssentialEditorCard(essential) {
           const template = document.getElementById("editor-custom-essential-template");
@@ -937,10 +951,15 @@ document.addEventListener("DOMContentLoaded", () => {
           card.dataset.essentialId = essential.id;
 
           card.querySelector('.essential-item-title').value = essential.title;
-          card.querySelector('.essential-item-desc').value = essential.data.description;
           
           const iconFormGroup = card.querySelector('.form-group:nth-child(2)');
           iconFormGroup.appendChild(this.createIconPicker(essential));
+
+          const editorContainer = card.querySelector('.quill-editor-container');
+          this.createRichTextEditor(editorContainer, essential.data.description, (newContent) => {
+              essential.data.description = newContent;
+              this.App.renderEssentials(); // Re-render if you want live preview of modal content
+          });
 
           const titleLabel = card.querySelector('.editor-accordion-title');
           titleLabel.textContent = essential.title;
@@ -998,31 +1017,11 @@ document.addEventListener("DOMContentLoaded", () => {
         this.updateAllCategorySelectors(select, item.categoryId);
         this.dom.itemsList.appendChild(card);
         
-        // --- START: NEW WYSIWYG Editor Logic ---
         const editorContainer = card.querySelector('.quill-editor-container');
-        const quill = new Quill(editorContainer, {
-            modules: {
-                toolbar: [
-                    ['bold', 'italic'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }]
-                ]
-            },
-            placeholder: 'e.g. Our classic fried rice with a twist...',
-            theme: 'snow'
+        this.createRichTextEditor(editorContainer, item.description, (newContent) => {
+            item.description = newContent;
+            this.App.renderMenuItems();
         });
-
-        // Load existing description into the editor
-        quill.pasteHTML(item.description || '');
-
-        // Save changes from the editor back to our data object
-        quill.on('text-change', () => {
-            const currentItem = this.App.data.menuItems.find(i => i.id === item.id);
-            if(currentItem) {
-                currentItem.description = quill.root.innerHTML;
-                this.App.renderMenuItems();
-            }
-        });
-        // --- END: NEW WYSIWYG Editor Logic ---
       },
       updateAllCategorySelectors(singleSelect = null, selectedId = null) {
         const categoryOptions = this.App.data.menuCategories.map((cat) => `<option value="${cat.id}">${cat.name}</option>`).join("");
@@ -1043,7 +1042,13 @@ document.addEventListener("DOMContentLoaded", () => {
         card.dataset.id = section.id;
         card.querySelector(".editor-accordion-title").textContent = section.title;
         card.querySelector(".guide-item-title").value = section.title;
-        card.querySelector(".guide-item-content").value = section.content;
+        
+        const editorContainer = card.querySelector('.quill-editor-container');
+        this.createRichTextEditor(editorContainer, section.content, (newContent) => {
+            section.content = newContent;
+            this.App.renderGuide();
+        });
+
         this.dom.guideList.appendChild(card);
       },
       populateExploreTab() {
@@ -1061,8 +1066,14 @@ document.addEventListener("DOMContentLoaded", () => {
         card.querySelector(".location-item-name").value = location.name;
         card.querySelector(".location-item-category").value = location.category;
         card.querySelector(".location-item-distance").value = location.distance;
-        card.querySelector(".location-item-desc").value = location.description;
         card.querySelector(".location-item-gmaps").value = location.gmapsUrl;
+        
+        const editorContainer = card.querySelector('.quill-editor-container');
+        this.createRichTextEditor(editorContainer, location.description, (newContent) => {
+            location.description = newContent;
+            this.App.renderExplorePage();
+        });
+
         this.dom.exploreLocationsList.appendChild(card);
       },
       
@@ -1102,7 +1113,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 icon: 'fa-solid fa-star',
                 active: true,
                 data: {
-                    description: 'This is the content for your new essential link.',
+                    description: '<p>This is the content for your new essential link.</p>',
                     image: 'https://via.placeholder.com/400x220'
                 }
             };
@@ -1165,14 +1176,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         this.App.data.directions[key] = e.target.value;
                         this.App.renderDirections();
                     }
-                } else if (key) {
+                } else if (essential && essential.data && key) {
                   essential.data[key] = e.target.value;
                   this.App.renderEssentials();
                 }
             } else if (card.dataset.type === 'custom') {
-                if (e.target.classList.contains('essential-item-title')) essential.title = e.target.value;
-                if (e.target.classList.contains('essential-item-desc')) essential.data.description = e.target.value;
-                this.App.renderEssentials();
+                if (e.target.classList.contains('essential-item-title')) {
+                    essential.title = e.target.value;
+                    this.App.renderEssentials();
+                }
             }
         });
         
@@ -1188,7 +1200,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         
         this.dom.addExploreLocationBtn.addEventListener("click", () => {
-          const newLoc = { id: newId(), category: 'Restaurant', name: 'New Location', description: '', image: 'https://via.placeholder.com/400x200', gmapsUrl: 'https://maps.google.com', distance: '15 min drive' };
+          const newLoc = { id: newId(), category: 'Restaurant', name: 'New Location', description: '<p></p>', image: 'https://via.placeholder.com/400x200', gmapsUrl: 'https://maps.google.com', distance: '15 min drive' };
           this.App.data.exploreLocations.push(newLoc);
           this.addExploreLocationCard(newLoc);
           this.App.renderExplorePage();
@@ -1199,7 +1211,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(!card) return;
             const loc = this.App.data.exploreLocations.find(l => l.id === card.dataset.id);
             if(!loc) return;
-            const propMap = { 'location-item-name': 'name', 'location-item-category': 'category', 'location-item-desc': 'description', 'location-item-gmaps': 'gmapsUrl', 'location-item-distance': 'distance' };
+            const propMap = { 'location-item-name': 'name', 'location-item-category': 'category', 'location-item-gmaps': 'gmapsUrl', 'location-item-distance': 'distance' };
             for (const [cls, prop] of Object.entries(propMap)) {
                 if (e.target.classList.contains(cls)) loc[prop] = e.target.value;
             }
@@ -1241,7 +1253,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         this.dom.addMenuItemBtn.addEventListener("click", () => {
-            const newItem = { id: newId(), categoryId: this.App.data.menuCategories[0]?.id || "", name: "New Item", description: "", price: 0, image: "https://via.placeholder.com/80", tags: [], extraInfo: '' };
+            const newItem = { id: newId(), categoryId: this.App.data.menuCategories[0]?.id || "", name: "New Item", description: "<p></p>", price: 0, image: "https://via.placeholder.com/80", tags: [], extraInfo: '' };
             this.App.data.menuItems.push(newItem);
             this.addMenuItemCard(newItem);
             this.App.renderMenu();
@@ -1299,7 +1311,7 @@ document.addEventListener("DOMContentLoaded", () => {
          });
 
         this.dom.addGuideBtn.addEventListener("click", () => {
-            const newSection = { id: newId(), title: "New Section", content: "" };
+            const newSection = { id: newId(), title: "New Section", content: "<p></p>" };
             this.App.data.guideSections.push(newSection);
             this.addGuideCard(newSection);
             this.App.renderGuide();
@@ -1316,10 +1328,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = e.target.closest(".editor-accordion-card");
             const section = this.App.data.guideSections.find((s) => s.id === card.dataset.id);
             if (!section) return;
-            if (e.target.classList.contains("guide-item-title")) section.title = e.target.value;
-            if (e.target.classList.contains("guide-item-content")) section.content = e.target.value;
-            card.querySelector(".editor-accordion-title").textContent = section.title;
-            this.App.renderGuide();
+            if (e.target.classList.contains("guide-item-title")) {
+                section.title = e.target.value;
+                card.querySelector(".editor-accordion-title").textContent = section.title;
+                this.App.renderGuide();
+            }
           });
       },
     },
