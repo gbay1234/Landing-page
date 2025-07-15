@@ -1,3 +1,5 @@
+/* --- START OF FILE builder-style.css --- */
+
 /* --- START: SUCCESS TOAST STYLES --- */
 /* These styles control the popup message that appears at the top of the screen. */
 #success-toast {
@@ -1347,6 +1349,88 @@ input[type="checkbox"].editor-toggle:checked::before {
   color: #ccc;
   cursor: not-allowed;
 }
+
+/* --- START: EDITOR ICON PICKER STYLES --- */
+.icon-picker-container {
+  position: relative;
+}
+.icon-picker-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.icon-picker-btn span {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.icon-picker-btn i {
+  font-size: 1.2rem;
+  width: 20px;
+  text-align: center;
+}
+.icon-picker-panel {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  z-index: 1005;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 5px;
+  padding: 10px;
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.icon-picker-panel.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.icon-option-btn {
+  background: #f7f7f7;
+  border: 1px solid transparent;
+  padding: 12px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-color);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.icon-option-btn:hover {
+  background-color: #e9e9e9;
+}
+.icon-option-btn.selected {
+  background-color: #e1f5fe;
+  border-color: var(--brand-color);
+  font-weight: 700;
+}
+.icon-option-btn i {
+  font-size: 1.5rem;
+  color: var(--brand-color);
+}
+/* --- END: EDITOR ICON PICKER STYLES --- */
+
 /* --- END: LIVE EDITOR STYLES --- */
 
 /* --- START: EMAIL GATE MODAL STYLES --- */

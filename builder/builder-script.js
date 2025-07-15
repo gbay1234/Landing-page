@@ -684,6 +684,13 @@ document.addEventListener("DOMContentLoaded", () => {
             this.showToast(`${item.name} added to order!`);
             this.dom.itemDetailModal.classList.add('hidden');
         }
+        
+        // Close icon picker if clicking outside
+        if (!e.target.closest('.icon-picker-container')) {
+            document.querySelectorAll('.icon-picker-panel.active').forEach(panel => {
+                panel.classList.remove('active');
+            });
+        }
       });
       
       this.dom.publishNowBtn.addEventListener("click", () => this.handlePublish());
@@ -871,6 +878,55 @@ document.addEventListener("DOMContentLoaded", () => {
         this.dom.editorEssentialsList.appendChild(card);
       },
 
+      createIconPicker(essential) {
+        const container = document.createElement('div');
+        container.className = 'icon-picker-container';
+
+        const displayBtn = document.createElement('button');
+        displayBtn.className = 'icon-picker-btn';
+
+        const panel = document.createElement('div');
+        panel.className = 'icon-picker-panel';
+        
+        const updateDisplay = (iconClass, iconName) => {
+            displayBtn.innerHTML = `
+                <span><i class="${iconClass}"></i> ${iconName}</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            `;
+        };
+
+        for (const [iconClass, iconName] of Object.entries(this.icons)) {
+            const optionBtn = document.createElement('button');
+            optionBtn.className = 'icon-option-btn';
+            optionBtn.dataset.iconClass = iconClass;
+            optionBtn.innerHTML = `<i class="${iconClass}"></i><span>${iconName}</span>`;
+            if (essential.icon === iconClass) {
+                optionBtn.classList.add('selected');
+            }
+
+            optionBtn.addEventListener('click', () => {
+                essential.icon = iconClass;
+                updateDisplay(iconClass, iconName);
+                panel.classList.remove('active');
+                
+                panel.querySelector('.selected')?.classList.remove('selected');
+                optionBtn.classList.add('selected');
+
+                this.App.renderEssentials();
+            });
+            panel.appendChild(optionBtn);
+        }
+
+        displayBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            panel.classList.toggle('active');
+        });
+
+        updateDisplay(essential.icon, this.icons[essential.icon] || 'Select Icon');
+        container.append(displayBtn, panel);
+        return container;
+      },
+
       addCustomEssentialEditorCard(essential) {
           const template = document.getElementById("editor-custom-essential-template");
           const card = template.content.cloneNode(true).firstElementChild;
@@ -879,26 +935,19 @@ document.addEventListener("DOMContentLoaded", () => {
           card.querySelector('.essential-item-title').value = essential.title;
           card.querySelector('.essential-item-desc').value = essential.data.description;
           
-          const iconSelect = card.querySelector('.essential-item-icon-select');
-          for (const [className, name] of Object.entries(this.icons)) {
-              const option = document.createElement('option');
-              option.value = className;
-              option.textContent = name;
-              iconSelect.appendChild(option);
-          }
-          iconSelect.value = essential.icon;
+          const iconFormGroup = card.querySelector('.form-group:nth-child(2)');
+          iconFormGroup.appendChild(this.createIconPicker(essential));
 
           const titleLabel = card.querySelector('.editor-accordion-title');
           titleLabel.textContent = essential.title;
 
           const toggle = card.querySelector('.editor-accordion-header .editor-toggle');
-          if (toggle) { // This is a safe guard
+          if (toggle) {
               toggle.checked = essential.active;
-              // We need to give it a unique ID to connect to the label
-              const newId = `toggle-${essential.id}`;
-              toggle.id = newId;
+              const newIdVal = `toggle-${essential.id}`;
+              toggle.id = newIdVal;
               const label = card.querySelector('.editor-accordion-header label');
-              if (label) label.htmlFor = newId;
+              if (label) label.htmlFor = newIdVal;
           }
           
           card.querySelector('.essential-item-title').addEventListener('input', (e) => {
@@ -1033,7 +1082,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         this.dom.panel.addEventListener("click", (e) => {
             const header = e.target.closest(".editor-accordion-header");
-            if (header && !e.target.closest('.form-group-row')) header.parentElement.classList.toggle("active");
+            if (header && !e.target.closest('.form-group-row') && !e.target.closest('.icon-picker-btn')) {
+              header.parentElement.classList.toggle("active");
+            }
         });
 
         this.dom.editorEssentialsList.addEventListener('change', e => {
@@ -1066,11 +1117,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(e.target.files[0]) {
                     this.App.data.directions.image = URL.createObjectURL(e.target.files[0]);
                     this.App.renderDirections();
-                }
-            } else if (e.target.classList.contains('essential-item-icon-select')) {
-                 if (essential) {
-                    essential.icon = e.target.value;
-                    this.App.renderEssentials();
                 }
             }
         });
