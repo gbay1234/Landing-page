@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           categoryId: "cat1",
           name: "Nasi Goreng Special",
-          description: "Classic Indonesian fried rice with chicken satay & fried egg.",
+          description: "<p>Classic Indonesian fried rice with chicken satay &amp; fried egg.</p>",
           price: 85000,
           image: "https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           tags: ['Top Seller', 'Spicy 🌶️'],
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           categoryId: "cat1",
           name: "Fresh Coconut Water",
-          description: "Straight from the tree. The perfect poolside refreshment.",
+          description: "<p>Straight from the tree. The perfect poolside refreshment.</p>",
           price: 35000,
           image: "https://images.pexels.com/photos/2233348/pexels-photo-2233348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           tags: ['Healthy', 'Vegan'],
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           categoryId: "cat2",
           name: "Private Yoga Session",
-          description: "A 60-minute private yoga class with a certified instructor, right here at the villa.",
+          description: "<p>A 60-minute private yoga class with a certified instructor, right here at the villa.</p>",
           price: 450000,
           image: "https://images.pexels.com/photos/3822623/pexels-photo-3822623.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
           tags: ['Romantic', 'Wellness'],
@@ -336,15 +336,18 @@ document.addEventListener("DOMContentLoaded", () => {
           itemEl.className = "menu-item";
           itemEl.dataset.id = item.id;
           const tagsHtml = item.tags.map((tag, index) => `<span class="item-tag tag-style-${(index % 4) + 1}">${tag}</span>`).join('');
+          
+          // Using a div for the description allows it to contain the <p> tags from the editor
           itemEl.innerHTML = `
             <img class="item-image" src="${item.image}" alt="${item.name}">
             <div class="item-details">
                 <div class="item-tags-container">${tagsHtml}</div>
                 <h3 class="item-name">${item.name}</h3>
-                <p class="item-description">${item.description}</p>
+                <div class="item-description">${item.description}</div>
                 <p class="item-price">IDR ${item.price.toLocaleString("id-ID")}</p>
             </div>
             <button class="add-button" data-item-id="${item.id}">+</button>`;
+
             itemEl.addEventListener('click', (e) => {
                 if (!e.target.closest('.add-button')) {
                     this.showItemDetail(item.id);
@@ -408,7 +411,8 @@ document.addEventListener("DOMContentLoaded", () => {
         this.dom.detailItemImage.src = item.image;
         this.dom.detailItemImage.alt = item.name;
         this.dom.detailItemName.textContent = item.name;
-        this.dom.detailItemDescription.textContent = item.description;
+        // Use .innerHTML to correctly render formatted text from the editor
+        this.dom.detailItemDescription.innerHTML = item.description; 
         this.dom.detailItemPrice.textContent = `IDR ${item.price.toLocaleString("id-ID")}`;
         this.dom.detailItemTags.innerHTML = item.tags.map((tag, index) => `<span class="item-tag tag-style-${(index % 4) + 1}">${tag}</span>`).join('');
         if (item.extraInfo) {
@@ -976,7 +980,7 @@ document.addEventListener("DOMContentLoaded", () => {
         this.dom.addCategoryBtn.disabled = count >= 3;
         this.dom.categoriesList.querySelectorAll(".editor-remove-btn").forEach((btn) => (btn.disabled = count <= 1));
       },
-            addMenuItemCard(item) {
+      addMenuItemCard(item) {
         const template = document.getElementById("editor-menu-item-template");
         const cardHtml = template.innerHTML.replace(/\{\{id\}\}/g, item.id);
         const cardWrapper = document.createElement("div");
@@ -1008,14 +1012,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // Load existing description into the editor
-        // Note: Quill works with HTML, so even plain text will be wrapped in <p> tags.
-        quill.pasteHTML(item.description);
+        quill.pasteHTML(item.description || '');
 
         // Save changes from the editor back to our data object
         quill.on('text-change', () => {
-            item.description = quill.root.innerHTML;
-            // Update the public-facing menu to reflect changes
-            this.App.renderMenuItems(); 
+            const currentItem = this.App.data.menuItems.find(i => i.id === item.id);
+            if(currentItem) {
+                currentItem.description = quill.root.innerHTML;
+                this.App.renderMenuItems();
+            }
         });
         // --- END: NEW WYSIWYG Editor Logic ---
       },
@@ -1258,19 +1263,27 @@ document.addEventListener("DOMContentLoaded", () => {
              this.updateAllCategorySelectors(); this.App.renderMenu();
            }
          });
-                  this.dom.itemsList.addEventListener("input", (e) => {
-           const card = e.target.closest(".editor-accordion-card"); if (!card) return;
-           const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id); if (!item) return;
-           const propMap = { "menu-item-name": "name", "menu-item-price": "price", "menu-item-category-select": "categoryId", "menu-item-extra": "extraInfo" };
-           for (const [cls, prop] of Object.entries(propMap)) if (e.target.classList.contains(cls)) item[prop] = prop === "price" ? Number(e.target.value) : e.target.value;
-           if (e.target.classList.contains("menu-item-tags")) item.tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
-           card.querySelector(".editor-accordion-title").textContent = item.name;
-           this.App.renderMenu();
+         this.dom.itemsList.addEventListener("click", (e) => {
+           const card = e.target.closest(".editor-accordion-card");
+           if (!card) return;
+           if (e.target.closest(".editor-remove-btn")) {
+             this.App.data.menuItems = this.App.data.menuItems.filter((i) => i.id !== card.dataset.id);
+             card.remove(); this.App.renderMenu();
+           }
+           const reorderBtn = e.target.closest(".reorder-btn");
+           if (reorderBtn) {
+               const direction = reorderBtn.dataset.direction;
+               const items = this.App.data.menuItems;
+               const index = items.findIndex(item => item.id === card.dataset.id);
+               if (direction === 'up' && index > 0) [items[index], items[index - 1]] = [items[index - 1], items[index]];
+               else if (direction === 'down' && index < items.length - 1) [items[index], items[index + 1]] = [items[index + 1], items[index]];
+               this.populateMenuTab(); this.App.renderMenu();
+           }
          });
          this.dom.itemsList.addEventListener("input", (e) => {
            const card = e.target.closest(".editor-accordion-card"); if (!card) return;
            const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id); if (!item) return;
-           const propMap = { "menu-item-name": "name", "menu-item-desc": "description", "menu-item-price": "price", "menu-item-category-select": "categoryId", "menu-item-extra": "extraInfo" };
+           const propMap = { "menu-item-name": "name", "menu-item-price": "price", "menu-item-category-select": "categoryId", "menu-item-extra": "extraInfo" };
            for (const [cls, prop] of Object.entries(propMap)) if (e.target.classList.contains(cls)) item[prop] = prop === "price" ? Number(e.target.value) : e.target.value;
            if (e.target.classList.contains("menu-item-tags")) item.tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
            card.querySelector(".editor-accordion-title").textContent = item.name;
