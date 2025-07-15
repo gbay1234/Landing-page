@@ -195,6 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
         directionsGmapsLink: document.querySelector('[data-editor-target="directionsGmapsLink"]'),
         directionsTitle1: document.querySelector('[data-editor-target="directionsTitle1"]'),
         directionsContent1: document.querySelector('[data-editor-target="directionsContent1"]'),
+        directionsTitle2: document.querySelector('[data-editor-target="directionsTitle2"]'),
         directionsContent2: document.querySelector('[data-editor-target="directionsContent2"]'),
         itemDetailModal: document.getElementById("item-detail-modal"),
         detailItemImage: document.getElementById("detail-item-image"),
@@ -638,6 +639,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // --- START: Event Listeners (Making things clickable) ---
     registerEventListeners() {
+      // --- BOTTOM NAVIGATION ---
       this.dom.bottomNav.addEventListener("click", e => {
         const navBtn = e.target.closest(".nav-btn");
         if (!navBtn) return;
@@ -655,37 +657,56 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
         
+      // --- DELEGATED BODY CLICKS (for dynamic elements) ---
       document.body.addEventListener("click", (e) => {
+        // --- Home Screen Navigation Cards ---
         const homeNavCard = e.target.closest(".nav-guide-card");
         if (homeNavCard) {
           const targetId = homeNavCard.dataset.target;
           const correspondingNavBtn = this.dom.bottomNav.querySelector(`.nav-btn[data-target="${targetId}"]`);
           if (correspondingNavBtn) {
             correspondingNavBtn.click();
-            return;
           }
+          return;
         }
         
+        // --- Home Screen Essential Cards ---
         const essentialCard = e.target.closest(".info-card[data-modal-target]");
         if (essentialCard) {
           this.showModal(essentialCard.dataset.modalTarget, essentialCard.dataset.id);
           return;
         }
         
-        if (e.target.closest(".modal-close-btn")) e.target.closest(".modal-overlay").classList.add("hidden");
+        // --- Modal Close Buttons ---
+        if (e.target.closest(".modal-close-btn")) {
+          e.target.closest(".modal-overlay").classList.add("hidden");
+          return;
+        }
 
-        if (e.target.closest("#view-order-button")) this.showModal('order-modal');
+        // --- View Order Floating Bar ---
+        if (e.target.closest("#view-order-button")) {
+          this.showModal('order-modal');
+          return;
+        }
 
-        if (e.target.closest(".add-button")) this.addToCart(e.target.dataset.itemId);
+        // --- Add to Order button (in menu list) ---
+        const addButton = e.target.closest(".add-button");
+        if (addButton) {
+          this.addToCart(addButton.dataset.itemId);
+          return;
+        }
         
-        if (e.target.closest("#detail-add-to-order-btn")) {
-            const item = this.data.menuItems.find(i => i.id === e.target.dataset.itemId);
+        // --- Add to Order button (in item detail modal) ---
+        const detailAddButton = e.target.closest("#detail-add-to-order-btn");
+        if (detailAddButton) {
+            const item = this.data.menuItems.find(i => i.id === detailAddButton.dataset.itemId);
             this.addToCart(item.id);
             this.showToast(`${item.name} added to order!`);
             this.dom.itemDetailModal.classList.add('hidden');
+            return;
         }
         
-        // Close icon picker if clicking outside
+        // --- Close icon picker if clicking outside ---
         if (!e.target.closest('.icon-picker-container')) {
             document.querySelectorAll('.icon-picker-panel.active').forEach(panel => {
                 panel.classList.remove('active');
@@ -693,13 +714,33 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
       
+      // --- SPECIFIC ELEMENT LISTENERS ---
+      
+      // --- Publish Button ---
       this.dom.publishNowBtn.addEventListener("click", () => this.handlePublish());
 
-      this.dom.orderItemsList.addEventListener('click', e => {
-          if (e.target.classList.contains('cart-add-btn')) this.addToCart(e.target.dataset.itemId);
-          if (e.target.classList.contains('cart-remove-btn')) this.removeFromCart(e.target.dataset.itemId);
+      // --- WiFi Modal Copy Button ---
+      this.dom.copyPassBtn.addEventListener('click', () => {
+        const pass = this.dom.wifiModal.querySelector('#wifi-pass').textContent;
+        navigator.clipboard.writeText(pass).then(() => {
+            this.showToast('Password copied to clipboard!');
+        }).catch(err => {
+            console.error('Failed to copy password: ', err);
+            alert('Could not copy password.');
+        });
       });
 
+      // --- Order Modal Controls (+/- buttons) ---
+      this.dom.orderItemsList.addEventListener('click', e => {
+          if (e.target.classList.contains('cart-add-btn')) {
+              this.addToCart(e.target.dataset.itemId);
+          }
+          if (e.target.classList.contains('cart-remove-btn')) {
+              this.removeFromCart(e.target.dataset.itemId);
+          }
+      });
+
+      // --- Menu and Explore Screen Filters/Tabs ---
       this.dom.menuTabsContainer.addEventListener("click", (e) => {
         e.preventDefault();
         const tab = e.target.closest("a");
@@ -715,6 +756,8 @@ document.addEventListener("DOMContentLoaded", () => {
           this.renderExplorePage();
         }
       });
+      
+      // --- AI Chat ---
       this.dom.chatForm.addEventListener("submit", (e) => this.handleSendMessage(e));
       
       this.dom.chatMessageList.addEventListener('click', e => {
@@ -739,6 +782,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
       });
 
+      // --- Email Gate for Editor ---
       this.dom.emailGateForm.addEventListener("submit", (e) => this.handleEmailGateSubmit(e));
     },
     // --- END: Event Listeners ---
