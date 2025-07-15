@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing & Plans | Staxy</title>
+    <meta name="description" content="Choose the perfect Staxy plan to upgrade your villa's guest experience. No commissions, no setup fees. Start your 14-day free trial today.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Feather Icons) -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- CSS & JS -->
+    <link rel="stylesheet" href="pricing-style.css">
+    <script src="pricing-script.js" defer></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container header-container">
+            <!-- FIX: Replaced text with image logo -->
+            <a href="/" class="logo"><img src="staxy-logo.png" alt="Staxy Logo"></a>
+            <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. PRICING HERO SECTION -->
+        <section class="pricing-hero">
+            <div class="container" data-reveal="up">
+                <h1 class="hero-headline">You're one step away.</h1>
+                <p class="hero-subhead">Your guest menu and guide look amazing. Choose a plan below to publish it live and start delighting your guests.</p>
+            </div>
+        </section>
+
+        <!-- 2. PRICING PLANS -->
+        <section id="plans" class="pricing-section">
+            <div class="container">
+                <div class="pricing-plans" data-reveal>
+                    <div class="pricing-card">
+                        <h3>Starter</h3>
+                        <p class="plan-desc">For the essential digital welcome.</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">29</span>
+                            <span class="period">/ mo</span>
+                        </div>
+                        <ul>
+                            <li><i data-feather="check"></i>Guest Menu Builder</li>
+                            <li><i data-feather="check"></i>Digital Guestbook</li>
+                            <li><i data-feather="check"></i>Up to 5 Upsell Items</li>
+                            <li><i data-feather="check"></i>QR Code Generator</li>
+                        </ul>
+                        <a href="https://your-app.com/signup?plan=starter" class="btn btn-secondary">Choose Starter</a>
+                    </div>
+                    <div class="pricing-card popular">
+                        <span class="popular-badge">Most Popular</span>
+                        <h3>Pro</h3>
+                        <p class="plan-desc">For hosts focused on revenue & automation.</p>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">49</span>
+                            <span class="period">/ mo</span>
+                        </div>
+                        <ul>
+                            <li><i data-feather="check"></i>Everything in Starter, plus:</li>
+                            <li><i data-feather="check"></i><strong>Unlimited</strong> Upsell Items</li>
+                            <li><i data-feather="check"></i>AI Concierge</li>
+                            <li><i data-feather="check"></i>Custom Branding</li>
+                        </ul>
+                        <a href="https://your-app.com/signup?plan=pro" class="btn btn-primary">Start Pro Trial</a>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Custom</h3>
+                        <p class="plan-desc">For multi-villa operators & partners.</p>
+                        <div class="price contact-us">
+                            Let's Talk
+                        </div>
+                        <ul>
+                            <li><i data-feather="check"></i>Everything in Pro, plus:</li>
+                            <li><i data-feather="check"></i>Multi-Villa Dashboard</li>
+                            <li><i data-feather="check"></i>White-Label Options</li>
+                            <li><i data-feather="check"></i>Priority Onboarding & Support</li>
+                        </ul>
+                        <a href="mailto:sales@staxy.com" class="btn btn-secondary">Contact Us</a>
+                    </div>
+                </div>
+                 <p class="pricing-guarantee" data-reveal><i data-feather="shield"></i> <strong>14-day free trial on all plans.</strong> No contracts. Cancel anytime.</p>
+            </div>
+        </section>
+
+        <!-- 3. FEATURE COMPARISON TABLE -->
+        <section class="feature-comparison-section">
+            <div class="container" data-reveal>
+                <h2 class="section-title">A feature for every moment of their stay.</h2>
+                <div class="comparison-table-wrapper">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Starter</th>
+                                <th>Pro</th>
+                                <th>Custom</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-group-header"><td colspan="4">Core Platform</td></tr>
+                            <tr>
+                                <td>Guest Menu Builder</td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                            <tr>
+                                <td>Digital Guestbook</td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                            <tr>
+                                <td>QR Code Generator</td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                            <tr class="table-group-header"><td colspan="4">Revenue & Upsells</td></tr>
+                            <tr>
+                                <td>Upsell Items</td>
+                                <td>5 Items</td>
+                                <td><strong>Unlimited</strong></td>
+                                <td><strong>Unlimited</strong></td>
+                            </tr>
+                             <tr>
+                                <td>Payment Processing (Stripe/Xendit)</td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                            <tr class="table-group-header"><td colspan="4">Guest Experience</td></tr>
+                             <tr>
+                                <td>AI Concierge (24/7 Answers)</td>
+                                <td><i data-feather="minus" class="icon-dash"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                             <tr>
+                                <td>Guest Inbox & Messaging</td>
+                                <td><span class="soon-tag">Soon</span></td>
+                                <td><span class="soon-tag">Soon</span></td>
+                                <td><span class="soon-tag">Soon</span></td>
+                            </tr>
+                            <tr>
+                                <td>Custom Branding & Domain</td>
+                                <td><i data-feather="minus" class="icon-dash"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                             <tr class="table-group-header"><td colspan="4">Management</td></tr>
+                             <tr>
+                                <td>Multi-Villa Dashboard</td>
+                                <td><i data-feather="minus" class="icon-dash"></i></td>
+                                <td><i data-feather="minus" class="icon-dash"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                             <tr>
+                                <td>White-Label Solution</td>
+                                <td><i data-feather="minus" class="icon-dash"></i></td>
+                                <td><i data-feather="minus" class="icon-dash"></i></td>
+                                <td><i data-feather="check" class="icon-check"></i></td>
+                            </tr>
+                             <tr>
+                                <td>Support</td>
+                                <td>Email Support</td>
+                                <td>Priority Email</td>
+                                <td><strong>Dedicated Manager</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. TESTIMONIALS (SOCIAL PROOF) -->
+        <section class="testimonials-section">
+            <div class="container" data-reveal>
+                <h2 class="section-title">Trusted by villa owners like you.</h2>
+                 <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <img src="https://randomuser.me/api/portraits/women/11.jpg" alt="Maria, Villa Owner">
+                        <blockquote>“Staxy is a game-changer. Our upsell revenue is up 40% in the first month alone. Guests love the digital menu, and I love the automated payments.”</blockquote>
+                        <cite>
+                            <strong>Maria S.</strong>
+                            <span>Owner, Villa Palma, Bali</span>
+                        </cite>
+                    </div>
+                    <div class="testimonial-card">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="David, Property Manager">
+                        <blockquote>“I manage 5 properties, and the amount of time Staxy saves me on answering repetitive questions is insane. The AI concierge is pure magic.”</blockquote>
+                        <cite>
+                            <strong>David Chen</strong>
+                            <span>Manager, Tulum Eco Retreats</span>
+                        </cite>
+                    </div>
+                 </div>
+            </div>
+        </section>
+        
+        <!-- 5. FAQ SECTION -->
+        <section class="faq-section">
+            <div class="container" data-reveal>
+                <h2 class="section-title">Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <details class="faq-item">
+                        <summary>Is there a free trial? <i class="faq-icon" data-feather="chevron-down"></i></summary>
+                        <p>Yes! All our paid plans come with a 14-day, no-obligation free trial. You can explore all the features of your chosen plan and cancel anytime before the trial ends without being charged.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Can I cancel my subscription anytime? <i class="faq-icon" data-feather="chevron-down"></i></summary>
+                        <p>Absolutely. Staxy is a monthly subscription with no long-term contracts. You can cancel your plan at any time from your account dashboard, no questions asked.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Are there any hidden fees or commissions? <i class="faq-icon" data-feather="chevron-down"></i></summary>
+                        <p>None. We believe in transparent, flat-rate pricing. We charge a simple monthly fee. We do not take any commission on your upsell revenue. Standard payment processing fees from Stripe or Xendit will still apply.</p>
+                    </details>
+                    <details class="faq-item">
+                        <summary>Do I need any technical skills to set this up? <i class="faq-icon" data-feather="chevron-down"></i></summary>
+                        <p>Not at all! Staxy was designed for busy villa owners, not tech experts. Our builder is incredibly simple to use. If you can write an email, you can build a beautiful guest app with Staxy.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container footer-container">
+            <div class="footer-top">
+                 <!-- FIX: Replaced text with image logo -->
+                 <a href="/" class="logo"><img src="staxy-logo.png" alt="Staxy Logo"></a>
+                 <p>© Staxy 2025 – Made with ❤️ in Bali</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- The "Reveal" Modal (Revised) -->
+    <div id="reveal-modal" class="reveal-modal-overlay hidden">
+        <div class="reveal-modal-content">
+            <button class="modal-close-btn">×</button>
+            <div class="modal-icon">
+                <i data-feather="award"></i>
+            </div>
+            <h2>Welcome, Founding Member!</h2>
+            <p id="reveal-modal-text">
+                <!-- Text will be set by JavaScript -->
+            </p>
+            <p class="reveal-modal-email-confirmation">
+                We'll notify you at: <strong id="user-email-display">your.email@example.com</strong>
+            </p>
+            <button id="modal-confirm-btn" class="btn btn-primary">Awesome, I'll Watch My Inbox</button>
+        </div>
+    </div>
+
+    <!-- Feather Icons init -->
+    <script>
+        feather.replace()
+    </script>
+</body>
+</html>
