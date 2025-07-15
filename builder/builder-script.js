@@ -981,10 +981,10 @@ document.addEventListener("DOMContentLoaded", () => {
       },
 
       populateMenuTab() {
+        this.dom.itemsList.innerHTML = "";
         this.dom.categoriesList.innerHTML = "";
         this.App.data.menuCategories.forEach((cat) => this.addCategoryCard(cat));
         this.updateCategoryButtonStates();
-        this.dom.itemsList.innerHTML = "";
         this.App.data.menuItems.forEach((item) => this.addMenuItemCard(item));
       },
       addCategoryCard(category) {
@@ -1093,12 +1093,14 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById(`${tabBtn.dataset.tab}-tab-content`).classList.add("active");
         });
 
+        // --- GLOBAL EDITOR INPUTS ---
         this.dom.villaNameInput.addEventListener("input", (e) => { this.App.data.villaName = e.target.value; this.App.renderAll(); });
         this.dom.villaNameInput.addEventListener("focus", () => this.App.triggerEducationalToast('personalization'));
         this.dom.headerImageUpload.addEventListener("change", (e) => { if(e.target.files[0]) {this.App.data.headerImage = URL.createObjectURL(e.target.files[0]); this.App.renderAll();} });
         this.dom.brandColorInput.addEventListener("input", (e) => { this.App.data.brandColor = e.target.value; this.App.renderAll(); });
         this.dom.homeSubtitleInput.addEventListener("input", (e) => { this.App.data.headerSubtitle = e.target.value; this.App.renderAll(); });
         
+        // --- HOME TAB LISTENERS ---
         this.dom.addCustomEssentialBtn.addEventListener('click', () => {
             const activeCount = Object.values(this.App.data.essentials).filter(es => es.active).length;
             if (activeCount >= 6) {
@@ -1180,11 +1182,6 @@ document.addEventListener("DOMContentLoaded", () => {
                   essential.data[key] = e.target.value;
                   this.App.renderEssentials();
                 }
-            } else if (card.dataset.type === 'custom') {
-                if (e.target.classList.contains('essential-item-title')) {
-                    essential.title = e.target.value;
-                    this.App.renderEssentials();
-                }
             }
         });
         
@@ -1199,14 +1196,80 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
         
+        // --- EXTRAS TAB LISTENERS ---
+        this.dom.addMenuItemBtn.addEventListener("click", () => {
+            const newItem = { id: newId(), categoryId: this.App.data.menuCategories[0]?.id || "", name: "New Item", description: "<p></p>", price: 0, image: "https://via.placeholder.com/80", tags: [], extraInfo: '' };
+            this.App.data.menuItems.push(newItem);
+            this.addMenuItemCard(newItem);
+            this.App.renderMenu();
+            this.App.triggerEducationalToast('menuItem');
+        });
+        this.dom.addCategoryBtn.addEventListener("click", () => {
+          if (this.App.data.menuCategories.length < 3) {
+            const newCat = { id: newId(), name: "New Category" };
+            this.App.data.menuCategories.push(newCat);
+            this.addCategoryCard(newCat);
+            this.updateCategoryButtonStates();
+          }
+        });
+        this.dom.categoriesList.addEventListener("click", (e) => {
+          const removeBtn = e.target.closest(".editor-remove-btn");
+          if (removeBtn && !removeBtn.disabled) {
+            const card = removeBtn.closest(".editor-category-card");
+            this.App.data.menuCategories = this.App.data.menuCategories.filter((c) => c.id !== card.dataset.id);
+            card.remove(); this.updateCategoryButtonStates(); this.updateAllCategorySelectors(); this.App.renderMenu();
+          }
+        });
+        this.dom.categoriesList.addEventListener("input", (e) => {
+          const input = e.target.closest("input");
+          if (input) {
+            const cat = this.App.data.menuCategories.find((c) => c.id === input.parentElement.dataset.id);
+            cat.name = input.value;
+            this.updateAllCategorySelectors(); this.App.renderMenu();
+          }
+        });
+        this.dom.itemsList.addEventListener("click", (e) => {
+          const card = e.target.closest(".editor-accordion-card");
+          if (!card) return;
+          if (e.target.closest(".editor-remove-btn")) {
+            this.App.data.menuItems = this.App.data.menuItems.filter((i) => i.id !== card.dataset.id);
+            card.remove(); this.App.renderMenu();
+          }
+          const reorderBtn = e.target.closest(".reorder-btn");
+          if (reorderBtn) {
+              const direction = reorderBtn.dataset.direction;
+              const items = this.App.data.menuItems;
+              const index = items.findIndex(item => item.id === card.dataset.id);
+              if (direction === 'up' && index > 0) [items[index], items[index - 1]] = [items[index - 1], items[index]];
+              else if (direction === 'down' && index < items.length - 1) [items[index], items[index + 1]] = [items[index + 1], items[index]];
+              this.populateMenuTab(); this.App.renderMenu();
+          }
+        });
+        this.dom.itemsList.addEventListener("input", (e) => {
+          const card = e.target.closest(".editor-accordion-card"); if (!card) return;
+          const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id); if (!item) return;
+          const propMap = { "menu-item-name": "name", "menu-item-price": "price", "menu-item-category-select": "categoryId", "menu-item-extra": "extraInfo" };
+          for (const [cls, prop] of Object.entries(propMap)) if (e.target.classList.contains(cls)) item[prop] = prop === "price" ? Number(e.target.value) : e.target.value;
+          if (e.target.classList.contains("menu-item-tags")) item.tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
+          card.querySelector(".editor-accordion-title").textContent = item.name;
+          this.App.renderMenu();
+        });
+        this.dom.itemsList.addEventListener("change", (e) => {
+          if (e.target.classList.contains("menu-item-img-upload")) {
+            const card = e.target.closest(".editor-accordion-card");
+            const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id);
+            if (item && e.target.files[0]) item.image = URL.createObjectURL(e.target.files[0]);
+            this.App.renderMenu();
+          }
+        });
+
+        // --- EXPLORE TAB LISTENERS ---
         this.dom.addExploreLocationBtn.addEventListener("click", () => {
           const newLoc = { id: newId(), category: 'Restaurant', name: 'New Location', description: '<p></p>', image: 'https://via.placeholder.com/400x200', gmapsUrl: 'https://maps.google.com', distance: '15 min drive' };
           this.App.data.exploreLocations.push(newLoc);
           this.addExploreLocationCard(newLoc);
           this.App.renderExplorePage();
         });
-        
-        // RESTORED: This listener handles the simple input fields in the Explore editor cards.
         this.dom.exploreLocationsList.addEventListener('input', e => {
             const card = e.target.closest('.editor-accordion-card');
             if(!card) return;
@@ -1219,7 +1282,6 @@ document.addEventListener("DOMContentLoaded", () => {
             card.querySelector('.editor-accordion-title').textContent = loc.name;
             this.App.renderExplorePage();
         });
-
         this.dom.exploreLocationsList.addEventListener('change', e => {
             if (e.target.classList.contains('location-item-img-upload')) {
                 const card = e.target.closest('.editor-accordion-card');
@@ -1230,17 +1292,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
-
         this.dom.exploreLocationsList.addEventListener('click', e => {
             const card = e.target.closest('.editor-accordion-card');
             if (!card) return;
-
             if (e.target.closest('.editor-remove-btn')) {
                 this.App.data.exploreLocations = this.App.data.exploreLocations.filter(l => l.id !== card.dataset.id);
                 card.remove();
                 this.App.renderExplorePage();
             }
-            
             const reorderBtn = e.target.closest('.reorder-btn');
             if (reorderBtn) {
                 const direction = reorderBtn.dataset.direction;
@@ -1253,64 +1312,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        this.dom.addMenuItemBtn.addEventListener("click", () => {
-            const newItem = { id: newId(), categoryId: this.App.data.menuCategories[0]?.id || "", name: "New Item", description: "<p></p>", price: 0, image: "https://via.placeholder.com/80", tags: [], extraInfo: '' };
-            this.App.data.menuItems.push(newItem);
-            this.addMenuItemCard(newItem);
-            this.App.renderMenu();
-            this.App.triggerEducationalToast('menuItem');
-        });
-         this.dom.categoriesList.addEventListener("click", (e) => {
-           const removeBtn = e.target.closest(".editor-remove-btn");
-           if (removeBtn && !removeBtn.disabled) {
-             const card = removeBtn.closest(".editor-category-card");
-             this.App.data.menuCategories = this.App.data.menuCategories.filter((c) => c.id !== card.dataset.id);
-             card.remove(); this.updateCategoryButtonStates(); this.updateAllCategorySelectors(); this.App.renderMenu();
-           }
-         });
-         this.dom.categoriesList.addEventListener("input", (e) => {
-           const input = e.target.closest("input");
-           if (input) {
-             const cat = this.App.data.menuCategories.find((c) => c.id === input.parentElement.dataset.id);
-             cat.name = input.value;
-             this.updateAllCategorySelectors(); this.App.renderMenu();
-           }
-         });
-         this.dom.itemsList.addEventListener("click", (e) => {
-           const card = e.target.closest(".editor-accordion-card");
-           if (!card) return;
-           if (e.target.closest(".editor-remove-btn")) {
-             this.App.data.menuItems = this.App.data.menuItems.filter((i) => i.id !== card.dataset.id);
-             card.remove(); this.App.renderMenu();
-           }
-           const reorderBtn = e.target.closest(".reorder-btn");
-           if (reorderBtn) {
-               const direction = reorderBtn.dataset.direction;
-               const items = this.App.data.menuItems;
-               const index = items.findIndex(item => item.id === card.dataset.id);
-               if (direction === 'up' && index > 0) [items[index], items[index - 1]] = [items[index - 1], items[index]];
-               else if (direction === 'down' && index < items.length - 1) [items[index], items[index + 1]] = [items[index + 1], items[index]];
-               this.populateMenuTab(); this.App.renderMenu();
-           }
-         });
-         this.dom.itemsList.addEventListener("input", (e) => {
-           const card = e.target.closest(".editor-accordion-card"); if (!card) return;
-           const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id); if (!item) return;
-           const propMap = { "menu-item-name": "name", "menu-item-price": "price", "menu-item-category-select": "categoryId", "menu-item-extra": "extraInfo" };
-           for (const [cls, prop] of Object.entries(propMap)) if (e.target.classList.contains(cls)) item[prop] = prop === "price" ? Number(e.target.value) : e.target.value;
-           if (e.target.classList.contains("menu-item-tags")) item.tags = e.target.value.split(',').map(tag => tag.trim()).filter(Boolean);
-           card.querySelector(".editor-accordion-title").textContent = item.name;
-           this.App.renderMenu();
-         });
-         this.dom.itemsList.addEventListener("change", (e) => {
-           if (e.target.classList.contains("menu-item-img-upload")) {
-             const card = e.target.closest(".editor-accordion-card");
-             const item = this.App.data.menuItems.find((i) => i.id == card.dataset.id);
-             if (item && e.target.files[0]) item.image = URL.createObjectURL(e.target.files[0]);
-             this.App.renderMenu();
-           }
-         });
-
+        // --- GUIDE TAB LISTENERS ---
         this.dom.addGuideBtn.addEventListener("click", () => {
             const newSection = { id: newId(), title: "New Section", content: "<p></p>" };
             this.App.data.guideSections.push(newSection);
@@ -1318,16 +1320,16 @@ document.addEventListener("DOMContentLoaded", () => {
             this.App.renderGuide();
             this.App.triggerEducationalToast('guideSection');
         });
-          this.dom.guideList.addEventListener("click", (e) => {
+        this.dom.guideList.addEventListener("click", (e) => {
             if (e.target.closest(".editor-remove-btn")) {
               const card = e.target.closest(".editor-accordion-card");
               this.App.data.guideSections = this.App.data.guideSections.filter((s) => s.id !== card.dataset.id);
               card.remove(); this.App.renderGuide();
             }
-          });
-          // RESTORED: This listener handles the 'title' input field in the Guide editor cards.
-          this.dom.guideList.addEventListener("input", (e) => {
+        });
+        this.dom.guideList.addEventListener("input", (e) => {
             const card = e.target.closest(".editor-accordion-card");
+            if (!card) return;
             const section = this.App.data.guideSections.find((s) => s.id === card.dataset.id);
             if (!section) return;
             if (e.target.classList.contains("guide-item-title")) {
@@ -1335,7 +1337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.querySelector(".editor-accordion-title").textContent = section.title;
                 this.App.renderGuide();
             }
-          });
+        });
       },
     },
   };
