@@ -48,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.add('upsell-item-card');
                 card.innerHTML = `<img src="${img}" alt="${name}" class="item-image"><div class="item-details"><div class="item-header"><div class="item-title-wrapper"><div class="item-tags">${tagsHTML}</div><h4>${name}</h4></div><button class="item-add-btn">${plusIconSVG}</button></div><p>${desc}</p><span class="item-price">${price}</span></div>`;
                 liveUpsellContainer.appendChild(card);
-                // No longer need feather.replace()
             });
         });
     }
@@ -77,61 +76,37 @@ document.addEventListener('DOMContentLoaded', () => {
             return thinkingElement;
         };
         
-        // --- UPDATED AI CHAT LOGIC ---
         const handleUserInput = async (text) => {
             if (!text.trim()) return;
-
-            // Add user message to history and display it
             chatHistory.push({ role: 'user', content: text });
             displayMessage(text, 'user');
             chatInput.value = '';
-            
-            // Hide suggestions while processing
             if (chatSuggestionsContainer) {
                 chatSuggestionsContainer.style.display = 'none';
             }
-
-            // Show the "thinking..." indicator
             const thinkingMessage = displayThinking();
-
             try {
-                // Send the entire chat history to the backend
                 const response = await fetch('/api/server', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    // The backend expects an object with a 'history' key
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ history: chatHistory }),
                 });
-
-                // Always remove the thinking indicator
                 thinkingMessage.remove();
-
                 if (!response.ok) {
-                    // Try to get a specific error message from the backend, or use a default
                     const errorData = await response.json().catch(() => null);
                     const errorMessage = errorData?.error || `An error occurred (Status: ${response.status}).`;
                     throw new Error(errorMessage);
                 }
-
                 const data = await response.json();
                 const aiResponseMarkdown = data.answer;
-
-                // Add the AI's response to history and display it
                 chatHistory.push({ role: 'assistant', content: aiResponseMarkdown });
                 const aiResponseHtml = converter.makeHtml(aiResponseMarkdown);
                 displayMessage(aiResponseHtml, 'bot');
-
             } catch (error) {
                 console.error("Error fetching from AI backend:", error);
-                
-                // Ensure the thinking indicator is gone if an error happened before it was removed
                 if (thinkingMessage && thinkingMessage.parentElement) {
                     thinkingMessage.remove();
                 }
-                
-                // Display a user-friendly error in the chat interface
                 const errorHtml = converter.makeHtml("I'm sorry, but I'm having trouble connecting right now. Please check your connection or try again in a moment.");
                 displayMessage(errorHtml, 'bot');
             }
@@ -179,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const showModalForm = (planName) => {
             const keyIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>`;
-            // This HTML block now contains your specific Formspree endpoint
             const formHTML = `
                 <button class="modal-close" aria-label="Close modal">×</button>
                 <div class="modal-icon">${keyIconSVG}</div>
@@ -193,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     action="https://formspree.io/f/mgvyjbdb" 
                     method="POST"
                 >
-                    <!-- This hidden input is crucial for categorizing your leads! -->
                     <input type="hidden" name="plan" value="${planName}">
                     <input type="email" name="email" id="modal-email-input" placeholder="Enter your email to claim" required>
                     <button type="submit" class="btn btn-primary">Claim My Founding Offer</button>
@@ -207,21 +180,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (emailInput) emailInput.focus();
             
             modalContentWrapper.querySelector('.modal-close').addEventListener('click', hideModal);
-
-            // This handler sends the data to Formspree
             modalContentWrapper.querySelector('#modal-claim-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const form = e.target;
                 const formData = new FormData(form);
                 const submittedEmail = formData.get('email');
-
                 fetch(form.action, {
                     method: 'POST',
                     body: formData,
                     headers: { 'Accept': 'application/json' }
                 }).then(response => {
                     if (response.ok) {
-                        console.log("Modal form submitted successfully to Formspree");
                         showModalSuccess(planName, submittedEmail);
                     } else {
                         throw new Error('Form submission failed');
@@ -244,5 +213,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) hideModal(); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.classList.contains('is-visible')) hideModal(); });
+    }
+
+    // --- ADDED: FAQ ACCORDION LOGIC ---
+    const faqItems = document.querySelectorAll('.faq-item');
+    if (faqItems.length > 0) {
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+
+            question.addEventListener('click', () => {
+                const isOpen = item.classList.contains('is-open');
+
+                // Close all other items for a cleaner accordion experience
+                faqItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('is-open');
+                        otherItem.querySelector('.faq-answer').style.maxHeight = '0';
+                    }
+                });
+
+                // Toggle the clicked item
+                if (isOpen) {
+                    item.classList.remove('is-open');
+                    answer.style.maxHeight = '0';
+                } else {
+                    item.classList.add('is-open');
+                    answer.style.maxHeight = answer.scrollHeight + 'px';
+                }
+            });
+        });
     }
 });
