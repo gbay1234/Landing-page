@@ -585,7 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
       this.displayThinkingIndicator();
 
       try {
-        const response = await fetch('/api/server', {
+        const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ history: this.state.chatHistory })
