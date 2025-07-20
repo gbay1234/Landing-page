@@ -755,6 +755,7 @@ body::before {
   border: 1px solid var(--border-color);
   background-color: #fff;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+ text-align: center; /* <<< FIX: ADD THIS LINE */
 }
 .contact-action-btn:hover {
   transform: translateY(-3px);
