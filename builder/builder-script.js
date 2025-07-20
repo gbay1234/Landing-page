@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         housekeeping: { id: 'housekeeping', type: 'pre-made', title: 'Housekeeping', icon: 'fa-solid fa-broom', active: false, modal: 'housekeeping-modal', data: { info: '<p>Daily light cleaning is provided between <strong>10 AM and 12 PM</strong>.</p><p>Full linen change every 3 days.</p>' } }
       },
       directions: {
-        image: "https://i.imgur.com/GXBf12a.jpeg",
+        image: "/drive-map.png",
         gmapsLink: "https://maps.app.goo.gl/m3fQPf2U4b9BvxmN9",
         title1: "From The Airport",
         content1: "We recommend using our trusted airport transfer service for a seamless arrival. A driver will be waiting for you with a sign bearing your name. The journey takes approximately 45 minutes depending on traffic.",
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
           category: "Sight",
           name: "Sunrise Temple",
           description: "<p>A beautiful historic temple with breathtaking views, especially at sunrise. Respectful attire required.</p>",
-          image: "https://images.pexels.com/photos/2618991/pexels-photo-2618991.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+          image: "/sunrise-temple.jpg",
           gmapsUrl: "https://maps.app.goo.gl/m3fQPf2U4b9BvxmN9",
           distance: "20 min drive",
         },
