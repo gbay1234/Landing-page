@@ -1,3 +1,5 @@
+/* --- START OF FILE builder-script.js --- */
+
 document.addEventListener("DOMContentLoaded", () => {
   // A helper function to create unique IDs for new items.
   const newId = () => `id_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -227,11 +229,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- END: Core App Initialization ---
 
     // --- START: Render Functions (Drawing content on the screen) ---
+    updateSharedImages() {
+        const imageUrl = `url('${this.data.headerImage}')`;
+        // Set the background for the entire page body
+        document.body.style.backgroundImage = imageUrl;
+        // Set the background for the hero headers inside the app
+        this.dom.heroHeaders.forEach(h => h.style.backgroundImage = imageUrl);
+    },
+
     renderAll() {
       document.documentElement.style.setProperty("--brand-color", this.data.brandColor);
       this.dom.villaName.textContent = this.data.villaName;
       this.dom.headerSubtitle.textContent = this.data.headerSubtitle;
-      this.dom.heroHeaders.forEach((h) => (h.style.backgroundImage = `url('${this.data.headerImage}')`));
+      this.updateSharedImages();
       this.renderHomeNav();
       this.renderEssentials();
       this.renderGuide();

@@ -1,5 +1,7 @@
 /* --- START OF FILE builder-style.css --- */
 
+/* --- START OF FILE builder-style.css --- */
+
 /* --- START: SUCCESS TOAST STYLES --- */
 /* These styles control the popup message that appears at the top of the screen. */
 #success-toast {
@@ -51,9 +53,22 @@
 }
 body {
   font-family: "Manrope", sans-serif;
-  background-color: #e0e0e0;
+  background-color: #2c3e50; /* Dark fallback color */
   color: var(--text-color);
   line-height: 1.6;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Keep background static on scroll */
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: inherit; /* Inherit background from body */
+  -webkit-backdrop-filter: blur(20px) brightness(0.7); /* For Safari */
+  backdrop-filter: blur(20px) brightness(0.7); /* Blur and dim the background */
+  z-index: -1; /* Place behind all content */
 }
 #app {
   max-width: 500px;
