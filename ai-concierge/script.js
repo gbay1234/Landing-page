@@ -278,54 +278,61 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    // --- ADDED: FOOTER CONTACT FORM LOGIC ---
+     // --- FOOTER CONTACT FORM LOGIC ---
     const footerForm = document.getElementById('footer-contact-form');
     if (footerForm) {
         footerForm.addEventListener('submit', (e) => {
+            // 1. Prevent the default redirect
             e.preventDefault();
+
             const form = e.target;
             const formData = new FormData(form);
             const statusDiv = document.getElementById('footer-form-status');
             const submitButton = form.querySelector('button[type="submit"]');
 
-            // Show a "sending" state
+            // 2. Provide "sending..." feedback to the user
             if (statusDiv) statusDiv.innerHTML = '';
             if (submitButton) {
                 submitButton.disabled = true;
                 submitButton.textContent = 'Sending...';
             }
 
+            // 3. Send the form data to Formspree in the background
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
-                headers: { 'Accept': 'application/json' }
+                headers: { 'Accept': 'application/json' } // Tells Formspree to send back JSON
             }).then(response => {
                 if (response.ok) {
+                    // 4. On success, show a success message and reset the form
                     if (statusDiv) {
                          statusDiv.innerHTML = `<p style="color: #22c55e;">Thank you! Your message has been sent.</p>`;
                     }
                     if (submitButton) submitButton.textContent = 'Message Sent!';
                     form.reset();
-                } else {
-                    // This handles server-side validation errors from Formspree
-                    response.json().then(data => {
-                        if (Object.hasOwn(data, 'errors')) {
-                             if (statusDiv) statusDiv.innerHTML = data["errors"].map(error => error["message"]).join(", ");
-                        } else {
-                            if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">Oops! There was a problem. Please try again.</p>`;
+                    // Re-enable the button after a short delay
+                    setTimeout(() => {
+                        if (submitButton) {
+                            submitButton.disabled = false;
+                            submitButton.textContent = 'Send Message';
                         }
-                    }).catch(() => { // Catch JSON parsing errors
-                         if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">Oops! There was a problem. Please try again.</p>`;
+                    }, 4000);
+                } else {
+                    // 5. On error, show an error message
+                    response.json().then(data => {
+                        const errorMessage = data.errors ? data.errors.map(error => error.message).join(', ') : 'Oops! There was a problem submitting your form.';
+                        if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">${errorMessage}</p>`;
+                    }).catch(() => {
+                         if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">An unknown error occurred. Please try again.</p>`;
                     });
-                    // Re-enable button on error
                     if (submitButton) {
                         submitButton.disabled = false;
                         submitButton.textContent = 'Send Message';
                     }
                 }
             }).catch(error => {
-                // This handles network errors
-                if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">Oops! A network error occurred. Please try again.</p>`;
+                // Handle network errors
+                if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">A network error occurred. Please check your connection.</p>`;
                 if (submitButton) {
                     submitButton.disabled = false;
                     submitButton.textContent = 'Send Message';

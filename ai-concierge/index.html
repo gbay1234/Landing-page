@@ -185,21 +185,16 @@
     <h4 class="footer-heading">Have a Question?</h4>
     <p>We're here to help. Fill out the form and we'll be in touch shortly.</p>
     
-    <!-- 1. Add the ID to the form tag -->
-                    <form action="https://formspree.io/f/mgvyjbdb" method="POST" class="footer-form" id="footer-contact-form">
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Your Name" required>
-                            <input type="email" name="email" placeholder="Your Email" required>
-                        </div>
-                        <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                        <div id="footer-form-status" style="margin-top: 10px; font-weight: 500;"></div>
-                    </form>
-    
-    <!-- 2. Add this div for status messages -->
-    <div class="footer-form-status" style="margin-top: 1rem; font-weight: 500;"></div>
-
-</div>
+    <form action="https://formspree.io/f/mgvyjbdb" method="POST" class="footer-form" id="footer-contact-form">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+        </div>
+        <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+        <!-- This div will display success or error messages -->
+        <div id="footer-form-status" style="margin-top: 10px; font-weight: 500; min-height: 1.2em;"></div>
+    </form>
             </div>
             <div class="footer-bottom"><p>Built for villa legends 🌴</p><p>© Staxy 2025 – Made with ❤️ in Bali</p></div>
         </div>
