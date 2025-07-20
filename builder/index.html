@@ -1,31 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- START: HEAD - Metadata, Fonts, and Stylesheets -->
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, user-scalable=no"
-    />
-    <title>[Your Villa Name] - Concierge</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Playfair+Display:wght@600&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Path updated to be relative -->
-    <link rel="stylesheet" href="/builder/builder-style.css" />
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-010WDVFZMM"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-010WDVFZMM');
+  </script>
 
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-    />
-    <!-- Add this line for the Rich Text Editor CSS -->
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
-    <!-- END: HEAD - Metadata, Fonts, and Stylesheets -->
-  </head>
+  <!-- Hotjar Tracking Code for Site 6469553 -->
+  <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:6469553,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+
+  <!-- START: HEAD - Metadata, Fonts, and Stylesheets -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>[Your Villa Name] - Concierge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/builder/builder-style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+  <!-- END: HEAD - Metadata, Fonts, and Stylesheets -->
+</head>
+
   <body>
     <div id="app">
       <main class="app-content">
@@ -132,15 +142,22 @@
             Enter your work email below to unlock temporary editor access and
             see how easy it is to customize your guest portal.
           </p>
-          <form id="email-gate-form">
-            <input
-              type="email"
-              id="email-gate-input"
-              placeholder="you@yourvilla.com"
-              required
-            />
-            <button type="submit" class="cta-button">Unlock Editor</button>
-          </form>
+<form 
+  id="email-gate-form" 
+  action="https://formspree.io/f/mgvyjbdb" 
+  method="POST"
+>
+  <input type="hidden" name="tag" value="builder" />
+  <input
+    type="email"
+    id="email-gate-input"
+    name="email"
+    placeholder="you@yourvilla.com"
+    required
+  />
+  <button type="submit" class="cta-button">Unlock Editor</button>
+</form>
+
         </div>
       </div>
 

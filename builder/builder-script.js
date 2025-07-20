@@ -610,16 +610,38 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- END: AI Chat Functions ---
     
     // --- START: App Logic and Handlers ---
-    handleEmailGateSubmit(event) {
-      event.preventDefault();
-      const email = this.dom.emailGateInput.value.trim();
-      if (email) {
-        console.log(`Email captured for analytics: ${email}`);
-        this.state.emailGatePassed = true;
-        this.dom.emailGateModal.classList.add("hidden");
-        this.Editor.open();
-      }
-    },
+handleEmailGateSubmit(event) {
+  event.preventDefault();
+  const email = this.dom.emailGateInput.value.trim();
+  if (!email) return;
+
+  // Save to localStorage
+  localStorage.setItem("staxy_user_email", email);
+  console.log(`Email captured for analytics: ${email}`);
+
+  // Submit to Formspree
+  const form = this.dom.emailGateForm;
+  const formData = new FormData(form);
+
+  fetch(form.action, {
+    method: 'POST',
+    body: formData,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(response => {
+    if (response.ok) {
+      this.state.emailGatePassed = true;
+      this.dom.emailGateModal.classList.add("hidden");
+      this.Editor.open();
+    } else {
+      alert("Submission failed. Please try again.");
+    }
+  })
+  .catch(() => {
+    alert("There was an error. Please check your connection.");
+  });
+}
+
 
     showToast(message) {
       clearTimeout(this.state.toastTimerId);
