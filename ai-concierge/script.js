@@ -278,4 +278,48 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-});
+    const footerContactForm = document.getElementById('footer-contact-form');
+    if (footerContactForm) {
+        const formStatus = footerContactForm.nextElementSibling; // The status div we added
+
+        footerContactForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent the default form submission
+            
+            const form = e.target;
+            const formData = new FormData(form);
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalButtonText = submitButton.textContent;
+
+            // Give user feedback
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+            formStatus.textContent = '';
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    formStatus.textContent = "Thank you! Your message has been sent.";
+                    formStatus.style.color = '#22c55e'; // Green for success
+                    form.reset();
+                } else {
+                    formStatus.textContent = "Oops! There was a problem submitting your form.";
+                    formStatus.style.color = '#ef4444'; // Red for error
+                }
+            }).catch(error => {
+                formStatus.textContent = "Oops! A network error occurred. Please try again.";
+                formStatus.style.color = '#ef4444'; // Red for error
+                console.error('Form submission network error:', error);
+            }).finally(() => {
+                // Re-enable the button
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+            });
+        });
+    }
+
+}); // This is the final closing bracket of the DOMContentLoaded listener

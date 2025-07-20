@@ -181,18 +181,24 @@
                         <a href="#" aria-label="Facebook"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.04c-5.5 0-9.96 4.46-9.96 9.96s4.46 9.96 9.96 9.96c5.5 0 9.96-4.46 9.96-9.96S17.5 2.04 12 2.04zm2.6 10.34h-1.82v5.52h-2.34v-5.52H9.12V10.5h1.32V9.05c0-1.1.5-2.22 2.22-2.22h1.4v1.82h-1.03c-.28 0-.37.14-.37.4v1.45h1.4l-.23 1.84z"></path></svg></a>
                     </div>
                 </div>
-                <div class="footer-column footer-contact">
-                    <h4 class="footer-heading">Have a Question?</h4>
-                    <p>We're here to help. Fill out the form and we'll be in touch shortly.</p>
-                    <form action="https://formspree.io/f/mgvyjbdb" method="POST" class="footer-form">
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Your Name" required>
-                            <input type="email" name="email" placeholder="Your Email" required>
-                        </div>
-                        <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
-                        <button type="submit" class="btn btn-primary">Send Message</button>
-                    </form>
-                </div>
+<div class="footer-column footer-contact">
+    <h4 class="footer-heading">Have a Question?</h4>
+    <p>We're here to help. Fill out the form and we'll be in touch shortly.</p>
+    
+    <!-- 1. Add the ID to the form tag -->
+    <form action="https://formspree.io/f/mgvyjbdb" method="POST" class="footer-form" id="footer-contact-form">
+        <div class="form-group">
+            <input type="text" name="name" placeholder="Your Name" required>
+            <input type="email" name="email" placeholder="Your Email" required>
+        </div>
+        <textarea name="message" placeholder="Your Message" rows="4" required></textarea>
+        <button type="submit" class="btn btn-primary">Send Message</button>
+    </form>
+    
+    <!-- 2. Add this div for status messages -->
+    <div class="footer-form-status" style="margin-top: 1rem; font-weight: 500;"></div>
+
+</div>
             </div>
             <div class="footer-bottom"><p>Built for villa legends 🌴</p><p>© Staxy 2025 – Made with ❤️ in Bali</p></div>
         </div>
