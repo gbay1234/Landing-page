@@ -417,21 +417,23 @@ body::before {
   padding: 0 20px 20px 20px;
 }
 /* Styling for Markdown/HTML content */
-.accordion-content p, #custom-essential-description p, #detail-item-extra-info p, #detail-item-description p {
+.accordion-content p, #custom-essential-description p, #detail-item-extra-info p, #detail-item-description p, #key-instructions p, #housekeeping-info p {
   margin-bottom: 1em;
 }
-.accordion-content p:last-child, #custom-essential-description p:last-child, #detail-item-extra-info p:last-child, #detail-item-description p:last-child {
+.accordion-content p:last-child, #custom-essential-description p:last-child, #detail-item-extra-info p:last-child, #detail-item-description p:last-child, #key-instructions p:last-child, #housekeeping-info p:last-child {
   margin-bottom: 0;
 }
-.accordion-content ul, #custom-essential-description ul, #detail-item-extra-info ul, #detail-item-description ul,
-.accordion-content ol, #custom-essential-description ol, #detail-item-extra-info ol, #detail-item-description ol {
+.accordion-content ul, #custom-essential-description ul, #detail-item-extra-info ul, #detail-item-description ul, #key-instructions ul, #housekeeping-info ul,
+.accordion-content ol, #custom-essential-description ol, #detail-item-extra-info ol, #detail-item-description ol, #key-instructions ol, #housekeeping-info ol {
   padding-left: 25px;
   margin-bottom: 1em;
 }
 .accordion-content b, .accordion-content strong,
 #custom-essential-description b, #custom-essential-description strong,
 #detail-item-extra-info b, #detail-item-extra-info strong,
-#detail-item-description b, #detail-item-description strong {
+#detail-item-description b, #detail-item-description strong,
+#key-instructions b, #key-instructions strong,
+#housekeeping-info b, #housekeeping-info strong {
   font-weight: 700;
   color: var(--text-color);
 }
@@ -1527,6 +1529,9 @@ input[type="checkbox"].editor-toggle:checked::before {
   min-height: 120px;
   line-height: 1.6;
   color: var(--text-color);
+}
+.quill-editor-container .ql-editor p {
+    margin-bottom: 1em;
 }
 .quill-editor-container .ql-editor.ql-blank::before {
   color: #aaa;

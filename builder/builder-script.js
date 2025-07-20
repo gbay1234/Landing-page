@@ -20,8 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
         contact: { id: 'contact', type: 'pre-made', title: 'Contact Host', icon: 'fa-solid fa-comment-dots', active: true, modal: 'contact-modal', data: { name: 'Villa Manager', phone: '+6281234567890', whatsapp: '+6281234567890' } },
         checkout: { id: 'checkout', type: 'pre-made', title: 'Check-in / Out', icon: 'fa-solid fa-clock', active: true, dynamicSubtitle: true, data: { in: '14:00', out: '11:00' } },
         directions: { id: 'directions', type: 'pre-made', title: 'How To Get Here', icon: 'fa-solid fa-map-pin', active: true, modal: 'directions-modal', data: {} },
-        keys: { id: 'keys', type: 'pre-made', title: 'Key & Access', icon: 'fa-solid fa-key', active: false, modal: 'key-modal', data: { instructions: 'The main key is in the lockbox next to the door. The code is 1-2-3-4.' } },
-        housekeeping: { id: 'housekeeping', type: 'pre-made', title: 'Housekeeping', icon: 'fa-solid fa-broom', active: false, modal: 'housekeeping-modal', data: { info: 'Daily light cleaning is provided between 10 AM and 12 PM. Full linen change every 3 days.' } }
+        keys: { id: 'keys', type: 'pre-made', title: 'Key & Access', icon: 'fa-solid fa-key', active: false, modal: 'key-modal', data: { instructions: '<p>The main key is in the lockbox next to the door. The code is <strong>1-2-3-4</strong>.</p>', image: '' } },
+        housekeeping: { id: 'housekeeping', type: 'pre-made', title: 'Housekeeping', icon: 'fa-solid fa-broom', active: false, modal: 'housekeeping-modal', data: { info: '<p>Daily light cleaning is provided between <strong>10 AM and 12 PM</strong>.</p><p>Full linen change every 3 days.</p>' } }
       },
       directions: {
         image: "https://i.imgur.com/GXBf12a.jpeg",
@@ -57,19 +57,19 @@ document.addEventListener("DOMContentLoaded", () => {
           id: newId(),
           title: "Arrival & Check-in",
           content:
-            "<p><b>Check-In Time:</b> After 2:00 PM</p><p><b>Check-Out Time:</b> Before 11:00 AM</p><p><br></p><p><b>Directions:</b> Please see the 'How to Get Here' card on the Home screen for detailed directions and map access.</p>",
+            "<p><strong>Check-In Time:</strong> After 2:00 PM</p><p><strong>Check-Out Time:</strong> Before 11:00 AM</p><p><strong>Directions:</strong> Please see the 'How to Get Here' card on the Home screen for detailed directions and map access.</p>",
         },
         {
           id: newId(),
           title: "How-To Guides",
           content:
-            "<p><b>Jacuzzi:</b> Press the 'Jets' button. It takes 15 mins to heat.</p><p><b>Air Conditioning:</b> Use the remote control. We recommend 24°C for comfort and energy saving.</p>",
+            "<p><strong>Jacuzzi:</strong> Press the 'Jets' button. It takes 15 mins to heat.</p><p><strong>Air Conditioning:</strong> Use the remote control. We recommend 24°C for comfort and energy saving.</p>",
         },
         {
           id: newId(),
           title: "House Rules & Policies",
           content:
-            "<ul><li>Please, no smoking inside the villa.</li><li>No unregistered guests are permitted overnight.</li><li>Keep noise to a minimum after 10 PM.</li></ul><p><br></p><p>Enjoy your stay!</p>",
+            "<ul><li>Please, no smoking inside the villa.</li><li>No unregistered guests are permitted overnight.</li><li>Keep noise to a minimum after 10 PM.</li></ul><p>Enjoy your stay!</p>",
         },
       ],
       menuCategories: [
@@ -460,10 +460,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 break;
             case 'key-modal':
-                modal.querySelector('#key-instructions').textContent = this.data.essentials.keys.data.instructions;
+                const keyData = this.data.essentials.keys.data;
+                modal.querySelector('#key-instructions').innerHTML = keyData.instructions;
+                const imgEl = modal.querySelector('#key-access-image');
+                if (keyData.image) {
+                    imgEl.src = keyData.image;
+                    imgEl.style.display = 'block';
+                } else {
+                    imgEl.style.display = 'none';
+                }
                 break;
             case 'housekeeping-modal':
-                modal.querySelector('#housekeeping-info').textContent = this.data.essentials.housekeeping.data.info;
+                modal.querySelector('#housekeeping-info').innerHTML = this.data.essentials.housekeeping.data.info;
                 break;
             case 'directions-modal':
                 this.renderDirections(); // Ensure directions data is fresh
@@ -912,10 +920,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 `;
                 break;
             case 'keys':
-                formContent = `<div class="form-group"><label>Instructions</label><textarea rows="4" data-key="instructions">${essential.data.instructions}</textarea></div>`;
+                formContent = `
+                    <div class="form-group">
+                        <label>Instructions</label>
+                        <div class="quill-editor-container"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Image (Optional)</label>
+                        <input type="file" class="file-input" data-key="image" accept="image/*" id="key-img-upload-${essential.id}" />
+                        <label class="file-input-label" for="key-img-upload-${essential.id}">Choose a file...</label>
+                    </div>
+                `;
                 break;
             case 'housekeeping':
-                formContent = `<div class="form-group"><label>Service Details</label><textarea rows="4" data-key="info">${essential.data.info}</textarea></div>`;
+                formContent = `
+                    <div class="form-group">
+                        <label>Service Details</label>
+                        <div class="quill-editor-container"></div>
+                    </div>
+                `;
                 break;
         }
 
@@ -930,6 +953,14 @@ document.addEventListener("DOMContentLoaded", () => {
             ${formContent ? `<div class="editor-accordion-content">${formContent}</div>` : ''}
         `;
         this.dom.editorEssentialsList.appendChild(card);
+
+        if (essential.id === 'keys' || essential.id === 'housekeeping') {
+            const editorContainer = card.querySelector('.quill-editor-container');
+            const dataKey = essential.id === 'keys' ? 'instructions' : 'info';
+            this.createRichTextEditor(editorContainer, essential.data[dataKey], (newContent) => {
+                essential.data[dataKey] = newContent;
+            });
+        }
       },
 
       createIconPicker(essential) {
@@ -1191,7 +1222,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!card) return;
             const essentialId = card.dataset.essentialId;
             const essential = this.App.data.essentials[essentialId];
-            
+            if (!essential) return;
+
             if (e.target.classList.contains('editor-toggle')) {
                 const activeCount = Object.values(this.App.data.essentials).filter(es => es.active).length;
                 const isChecked = e.target.checked;
@@ -1208,14 +1240,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 essential.active = isChecked;
                 this.App.renderEssentials();
-            } else if (e.target.classList.contains('essential-item-img-upload')) {
-                if (essential && e.target.files[0]) {
+            } else if (e.target.matches('input[type="file"]')) {
+                 if (essential.data && e.target.files[0]) {
                     essential.data.image = URL.createObjectURL(e.target.files[0]);
-                }
-            } else if (e.target.dataset.key === 'image' && e.target.id === 'dir-img-upload') {
-                if(e.target.files[0]) {
-                    this.App.data.directions.image = URL.createObjectURL(e.target.files[0]);
-                    this.App.renderDirections();
+                    if (essential.id === 'directions') this.App.renderDirections();
                 }
             }
         });

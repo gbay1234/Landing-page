@@ -198,9 +198,9 @@
         <div class="modal-content">
           <button class="modal-close-btn">×</button>
           <h3>Key & Access Info</h3>
-          <div class="wifi-info-box">
-              <span>Access Instructions</span>
-              <p id="key-instructions" style="white-space: pre-wrap; font-size: 1rem; background: #f0f0f0; padding: 10px; border-radius: 6px; margin-top: 4px;"></p>
+          <img src="" alt="Access Information" id="key-access-image" class="detail-modal-image" style="display: none; margin-bottom: 20px;">
+          <div id="key-instructions">
+            <!-- Instructions from Quill editor will be injected here -->
           </div>
         </div>
       </div>
@@ -210,9 +210,8 @@
         <div class="modal-content">
           <button class="modal-close-btn">×</button>
           <h3>Housekeeping</h3>
-          <div class="wifi-info-box">
-              <span>Service Details</span>
-              <p id="housekeeping-info" style="white-space: pre-wrap; font-size: 1rem; background: #f0f0f0; padding: 10px; border-radius: 6px; margin-top: 4px;"></p>
+          <div id="housekeeping-info">
+             <!-- Info from Quill editor will be injected here -->
           </div>
         </div>
       </div>
@@ -536,7 +535,7 @@
                 </div>
                 <div class="form-group">
                     <label>Image (Optional)</label>
-                    <input type="file" class="file-input essential-item-img-upload" accept="image/*" />
+                    <input type="file" class="file-input essential-item-img-upload" accept="image/*" data-key="image" />
                     <label class="file-input-label">Choose a file...</label>
                 </div>
                 <button class="editor-remove-btn"><i class="fa-solid fa-trash"></i> Remove Essential</button>
