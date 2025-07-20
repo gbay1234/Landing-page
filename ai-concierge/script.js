@@ -278,48 +278,59 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-    const footerContactForm = document.getElementById('footer-contact-form');
-    if (footerContactForm) {
-        const formStatus = footerContactForm.nextElementSibling; // The status div we added
-
-        footerContactForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevent the default form submission
-            
+    // --- ADDED: FOOTER CONTACT FORM LOGIC ---
+    const footerForm = document.getElementById('footer-contact-form');
+    if (footerForm) {
+        footerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             const form = e.target;
             const formData = new FormData(form);
+            const statusDiv = document.getElementById('footer-form-status');
             const submitButton = form.querySelector('button[type="submit"]');
-            const originalButtonText = submitButton.textContent;
 
-            // Give user feedback
-            submitButton.disabled = true;
-            submitButton.textContent = 'Sending...';
-            formStatus.textContent = '';
-            
+            // Show a "sending" state
+            if (statusDiv) statusDiv.innerHTML = '';
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Sending...';
+            }
+
             fetch(form.action, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
+                headers: { 'Accept': 'application/json' }
             }).then(response => {
                 if (response.ok) {
-                    formStatus.textContent = "Thank you! Your message has been sent.";
-                    formStatus.style.color = '#22c55e'; // Green for success
+                    if (statusDiv) {
+                         statusDiv.innerHTML = `<p style="color: #22c55e;">Thank you! Your message has been sent.</p>`;
+                    }
+                    if (submitButton) submitButton.textContent = 'Message Sent!';
                     form.reset();
                 } else {
-                    formStatus.textContent = "Oops! There was a problem submitting your form.";
-                    formStatus.style.color = '#ef4444'; // Red for error
+                    // This handles server-side validation errors from Formspree
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                             if (statusDiv) statusDiv.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+                        } else {
+                            if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">Oops! There was a problem. Please try again.</p>`;
+                        }
+                    }).catch(() => { // Catch JSON parsing errors
+                         if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">Oops! There was a problem. Please try again.</p>`;
+                    });
+                    // Re-enable button on error
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Send Message';
+                    }
                 }
             }).catch(error => {
-                formStatus.textContent = "Oops! A network error occurred. Please try again.";
-                formStatus.style.color = '#ef4444'; // Red for error
-                console.error('Form submission network error:', error);
-            }).finally(() => {
-                // Re-enable the button
-                submitButton.disabled = false;
-                submitButton.textContent = originalButtonText;
+                // This handles network errors
+                if (statusDiv) statusDiv.innerHTML = `<p style="color: #ef4444;">Oops! A network error occurred. Please try again.</p>`;
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                }
             });
         });
     }
-
-}); // This is the final closing bracket of the DOMContentLoaded listener
+});
