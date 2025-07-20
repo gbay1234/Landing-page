@@ -640,7 +640,7 @@ handleEmailGateSubmit(event) {
   .catch(() => {
     alert("There was an error. Please check your connection.");
   });
-}
+},
 
 
     showToast(message) {
